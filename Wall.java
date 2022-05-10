@@ -1,5 +1,4 @@
 
-public class Wall 
-{
-
+public class Wall {
+	private int length;
 }
