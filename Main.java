@@ -1,7 +1,4 @@
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
@@ -75,6 +72,20 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		
 	}
 
+	//handle mouse stuff
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
 
 //the panel that contains everything being drawn (players, enemies, walls, etc.)
