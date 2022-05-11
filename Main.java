@@ -72,6 +72,20 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		
 	}
 
+	//handle mouse stuff
+	@Override
+	public void mousePressed(MouseEvent e)
+	{
+
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
 }
 
 //the panel that contains everything being drawn (players, enemies, walls, etc.)
