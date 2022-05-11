@@ -9,6 +9,8 @@ public class Main extends JFrame implements ActionListener, MouseListener
 {
 	private Timer t;
 	private char state; //the current state of the game (m = menu, p = playing)
+
+	private Player player; //the player
 	
 	public Main()
 	{
@@ -19,7 +21,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		setResizable(false);
 		
 		//set up panel
-		MainPanel p = new MainPanel();
+		MainPanel p = new MainPanel(player);
 		add(p);
 		p.setPreferredSize(new Dimension(600,600));
 		
@@ -92,14 +94,15 @@ public class Main extends JFrame implements ActionListener, MouseListener
 @SuppressWarnings("serial")
 class MainPanel extends JPanel
 {
+	Player player;
 	//set up panel
-	public MainPanel()
+	public MainPanel(Player player)
 	{
+		this.player = player;
 		setBackground(Color.lightGray);
 	}
 	
 	//draw stuff
-	Player player;
 	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Bullet> bullets = new ArrayList<Bullet>();
@@ -107,6 +110,21 @@ class MainPanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		//draw player
+
+		//draw walls
+		for(int i = 0; i < walls.size(); i++)
+		{
+			Wall wall = walls.get(i);
+			//g.drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
+
+		}
+
+		//draw enemies
+		for(int i = 0; i < enemies.size(); i++)
+		{
+
+		}
 	}
 	
 	
