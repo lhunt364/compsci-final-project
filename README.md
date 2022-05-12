@@ -7,4 +7,5 @@ TODO:
       make bullet class.
       make gun class and use that class to create different weapons in the main class.
       
-      Wall Class needs: getX(), getY(), getWidth(), getHeight()
+      saving this here because helpful for drawing bullet lines
+      https://stackoverflow.com/questions/35648983/how-to-draw-a-line-with-a-direction-and-a-fixed-length#35649628
