@@ -126,12 +126,11 @@ class MainPanel extends JPanel
 			BufferedImage image = ImageIO.read(new File(""));
 			g.drawImage(image, 275, 275, null);
 		} catch (IOException e) {}
-
 		//draw walls
 		for(int i = 0; i < walls.size(); i++)
 		{
 			Wall wall = walls.get(i);
-			//g.drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
+			g.drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
 
 		}
 
