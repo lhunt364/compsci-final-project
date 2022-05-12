@@ -1,6 +1,10 @@
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
@@ -11,9 +15,18 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	private char state; //the current state of the game (m = menu, p = playing)
 
 	private Player player; //the player
-	
+
+	private Weapon equippedWeapon;
+	private ArrayList<Weapon> weapons;
+
 	public Main()
 	{
+		//set up weapons
+		weapons = new ArrayList<Weapon>();
+		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange));
+		equippedWeapon = null;
+		//set up other important stuff
+		player = new Player(0,0);
 		state = 'm';
 		//set up frame stuff
 		setBounds(100,100,600,600);
@@ -29,10 +42,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		addKeyListener(new KeyListener() {
 
 			@Override
-			public void keyTyped(KeyEvent e) 
-			{
-				
-			}
+			public void keyTyped(KeyEvent e) {}
 
 			@Override
 			public void keyPressed(KeyEvent e) 
@@ -51,8 +61,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 			}
 			
 		});
-		
-		
+
 		//finish frame stuff
 		//pack();
 		setVisible(true);
@@ -78,6 +87,8 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
+		e.getLocationOnScreen().getX();
+		e.getLocationOnScreen().getY();
 
 	}
 	@Overridey654
@@ -111,6 +122,10 @@ class MainPanel extends JPanel
 	{
 		super.paintComponent(g);
 		//draw player
+		try {
+			BufferedImage image = ImageIO.read(new File(""));
+			g.drawImage(image, 275, 275, null);
+		} catch (IOException e) {}
 
 		//draw walls
 		for(int i = 0; i < walls.size(); i++)
