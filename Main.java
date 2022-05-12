@@ -1,6 +1,10 @@
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,6 +25,8 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		weapons = new ArrayList<Weapon>();
 		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange));
 		equippedWeapon = null;
+		//set up other important stuff
+		player = new Player(0,0);
 		state = 'm';
 		//set up frame stuff
 		setBounds(100,100,600,600);
@@ -116,6 +122,10 @@ class MainPanel extends JPanel
 	{
 		super.paintComponent(g);
 		//draw player
+		try {
+			BufferedImage image = ImageIO.read(new File(""));
+			g.drawImage(image, 275, 275, null);
+		} catch (IOException e) {}
 
 		//draw walls
 		for(int i = 0; i < walls.size(); i++)
