@@ -80,7 +80,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	{
 
 	}
-	@Override
+	@Overridey654
 	public void mouseClicked(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
