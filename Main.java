@@ -1,6 +1,10 @@
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
@@ -9,9 +13,20 @@ public class Main extends JFrame implements ActionListener, MouseListener
 {
 	private Timer t;
 	private char state; //the current state of the game (m = menu, p = playing)
-	
+
+	private Player player; //the player
+
+	private Weapon equippedWeapon;
+	private ArrayList<Weapon> weapons;
+
 	public Main()
 	{
+		//set up weapons
+		weapons = new ArrayList<Weapon>();
+		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange));
+		equippedWeapon = null;
+		//set up other important stuff
+		player = new Player(0,0);
 		state = 'm';
 		//set up frame stuff
 		setBounds(100,100,600,600);
@@ -19,7 +34,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		setResizable(false);
 		
 		//set up panel
-		MainPanel p = new MainPanel();
+		MainPanel p = new MainPanel(player);
 		add(p);
 		p.setPreferredSize(new Dimension(600,600));
 		
@@ -27,10 +42,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		addKeyListener(new KeyListener() {
 
 			@Override
-			public void keyTyped(KeyEvent e) 
-			{
-				
-			}
+			public void keyTyped(KeyEvent e) {}
 
 			@Override
 			public void keyPressed(KeyEvent e) 
@@ -49,8 +61,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 			}
 			
 		});
-		
-		
+
 		//finish frame stuff
 		//pack();
 		setVisible(true);
@@ -76,9 +87,11 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
+		e.getLocationOnScreen().getX();
+		e.getLocationOnScreen().getY();
 
 	}
-	@Override
+	@Overridey654
 	public void mouseClicked(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
@@ -92,14 +105,15 @@ public class Main extends JFrame implements ActionListener, MouseListener
 @SuppressWarnings("serial")
 class MainPanel extends JPanel
 {
+	Player player;
 	//set up panel
-	public MainPanel()
+	public MainPanel(Player player)
 	{
+		this.player = player;
 		setBackground(Color.lightGray);
 	}
 	
 	//draw stuff
-	Player player;
 	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Bullet> bullets = new ArrayList<Bullet>();
@@ -107,6 +121,25 @@ class MainPanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+		//draw player
+		try {
+			BufferedImage image = ImageIO.read(new File(""));
+			g.drawImage(image, 275, 275, null);
+		} catch (IOException e) {}
+
+		//draw walls
+		for(int i = 0; i < walls.size(); i++)
+		{
+			Wall wall = walls.get(i);
+			//g.drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
+
+		}
+
+		//draw enemies
+		for(int i = 0; i < enemies.size(); i++)
+		{
+
+		}
 	}
 	
 	

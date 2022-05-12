@@ -6,3 +6,5 @@ TODO:
       make wall class.
       make bullet class.
       make gun class and use that class to create different weapons in the main class.
+      
+      Wall Class needs: getX(), getY(), getWidth(), getHeight()
