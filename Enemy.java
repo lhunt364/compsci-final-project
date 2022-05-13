@@ -8,5 +8,6 @@ public class Enemy extends Person
 	}
 	
 	//make enemy shoot stuff (:
+	
 
 }

@@ -91,7 +91,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		e.getLocationOnScreen().getY();
 
 	}
-	@Overridey654
+	@Override
 	public void mouseClicked(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
