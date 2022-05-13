@@ -19,4 +19,6 @@ public class Weapon
         this.color = color;
 
     }
+
+    //needs getter methods
 }
