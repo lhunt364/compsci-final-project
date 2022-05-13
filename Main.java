@@ -19,6 +19,8 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	private Weapon equippedWeapon;
 	private ArrayList<Weapon> weapons;
 
+	private MainPanel p;
+
 	public Main()
 	{
 		//set up weapons
@@ -34,7 +36,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		setResizable(false);
 		
 		//set up panel
-		MainPanel p = new MainPanel(player);
+		p = new MainPanel(player);
 		add(p);
 		p.setPreferredSize(new Dimension(600,600));
 		
@@ -99,6 +101,15 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	public void mouseEntered(MouseEvent e) {}
 	@Override
 	public void mouseExited(MouseEvent e) {}
+
+	//drawing data getters
+
+	/**@return ArrayList of all Enemies*/
+	public ArrayList<Enemy> getEnemies() {return p.getEnemies();}
+	/**@return ArrayList of all Bullets*/
+	public ArrayList<Bullet> getBullets() {return p.getBullets();}
+	/**@return ArrayList of all Walls*/
+	public ArrayList<Wall> getWalls() {return p.getWalls();}
 }
 
 //the panel that contains everything being drawn (players, enemies, walls, etc.)
@@ -140,6 +151,11 @@ class MainPanel extends JPanel
 
 		}
 	}
+
+	//panel getters
+	public ArrayList<Enemy> getEnemies() {return enemies;}
+	public ArrayList<Bullet> getBullets() {return bullets;}
+	public ArrayList<Wall> getWalls() {return walls;}
 	
 	
 	
