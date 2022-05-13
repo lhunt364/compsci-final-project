@@ -9,7 +9,7 @@ public class Weapon
     private String reloadSound;
     private Color color;
 
-    public Weapon(String name, int dmg, int fireRate, String fireSound, String reloadSound, Color color)
+    public Weapon(String name, int dmg, int fireRate, String fireSound, String reloadSound, Color color, int ammo)
     {
         this.name = name;
         this.dmg = dmg;

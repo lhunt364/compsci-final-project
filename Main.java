@@ -25,7 +25,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	{
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
-		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange));
+		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange, 30));
 		equippedWeapon = null;
 		//set up other important stuff
 		player = new Player(0,0);
