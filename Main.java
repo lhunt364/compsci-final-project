@@ -91,7 +91,7 @@ public class Main extends JFrame implements ActionListener, MouseListener
 		e.getLocationOnScreen().getY();
 
 	}
-	@Overridey654
+	@Override
 	public void mouseClicked(MouseEvent e) {}
 	@Override
 	public void mouseReleased(MouseEvent e) {}
@@ -123,7 +123,7 @@ class MainPanel extends JPanel
 		super.paintComponent(g);
 		//draw player
 		try {
-			BufferedImage image = ImageIO.read(new File(""));
+			BufferedImage image = ImageIO.read(new File("hannkschrader.jpg"));
 			g.drawImage(image, 275, 275, null);
 		} catch (IOException e) {}
 		//draw walls

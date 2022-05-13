@@ -7,6 +7,8 @@ public class Enemy extends Person
 		super(x, y);
 	}
 	
-	//make enemy shoot stuff (:
+	//make an update method that moves this enemy towards player.
+	// if this requires data about wall position or whatever then
+	// look at the getters in Main for that stuff or make one if needed.
 
 }
