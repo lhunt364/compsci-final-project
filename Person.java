@@ -20,5 +20,7 @@ public class Person
 	{
 		return y;
 	}
+
+	//needs setX and setY
 	
 }
