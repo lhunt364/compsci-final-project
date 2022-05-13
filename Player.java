@@ -9,5 +9,6 @@ public class Player extends Person
 	}
 	
 	//make move methods
+	//make an update method that moves the player like in the dodgeball project
 
 }
