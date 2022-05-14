@@ -28,6 +28,10 @@ public class Player
 		this.dy = dy;
 	}
 
+	public int getX() {return x;}
+
+	public int getY() {return y;}
+
 	//make move methods
 	public void update()
 	{
