@@ -25,8 +25,10 @@ public class Main extends JFrame implements ActionListener, MouseListener
 	{
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
-		weapons.add(new Weapon("AKM", 50, 600, null, null, Color.orange, 30));
-		equippedWeapon = null;
+		weapons.add(new Weapon("AKM", 50, 600, null, null, null, Color.orange, 30));
+		weapons.add(new Weapon("SIG MCX", 35, 800, null, null, null, Color.darkGray, 30));
+		weapons.add(new Weapon("ORSIS T-5000M", 100, 30, null, null, null, Color.gray, 5));
+		equippedWeapon = weapons.get(0);
 		//set up other important stuff
 		player = new Player(0,0);
 		state = 'm';
@@ -49,16 +51,20 @@ public class Main extends JFrame implements ActionListener, MouseListener
 			@Override
 			public void keyPressed(KeyEvent e) 
 			{
-				if(e.getKeyCode() == 'w') ;
-				if(e.getKeyCode() == 's') ;
-				if(e.getKeyCode() == 'a') ;
-				if(e.getKeyCode() == 'd') ;
+				if(e.getKeyCode() == 'w') player.setDy(-2);
+				if(e.getKeyCode() == 's') player.setDy(2);
+				if(e.getKeyCode() == 'a') player.setDx(-2);
+				if(e.getKeyCode() == 'd') player.setDx(2);
 				
 			}
 
 			@Override
 			public void keyReleased(KeyEvent e) 
 			{
+				if(e.getKeyCode() == 'w') player.setDy(0);
+				if(e.getKeyCode() == 's') player.setDy(0);
+				if(e.getKeyCode() == 'a') player.setDx(0);
+				if(e.getKeyCode() == 'd') player.setDx(0);
 
 			}
 			
@@ -133,8 +139,10 @@ class MainPanel extends JPanel
 	{
 		super.paintComponent(g);
 		//draw player
+		final int playerSize = 50; //the size of the player (keep this at 50 unless doing some testing stuff or whatever)
 		try {
-			BufferedImage image = ImageIO.read(new File("hannkschrader.jpg"));
+			//Image image = ImageIO.read(new File("hannkschrader.png")).getScaledInstance(playerSize, playerSize, Image.SCALE_SMOOTH);
+			Image image = ImageIO.read(new File("hannkschrader50x50.png"));
 			g.drawImage(image, 275, 275, null);
 		} catch (IOException e) {}
 		//draw walls

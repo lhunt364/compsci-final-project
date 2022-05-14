@@ -1,10 +1,14 @@
 
-public class Player extends Person
+public class Player
 {
-	int dx, dy;
+	private int x, y;
+	private int dx, dy;
 	public Player(int x, int y)
 	{
-		super(x, y);
+		this.x = x;
+		this.y = y;
+		this.dx = 0;
+		this.dy = 0;
 	}
 
 
@@ -24,11 +28,11 @@ public class Player extends Person
 		this.dy = dy;
 	}
 
-
-
 	//make move methods
-	public void update(){
-		y+=dx;
+	public void update()
+	{
+		x+=dx;
+		y+=dy;
 	}
 
 	//make an update method that moves the player like in the dodgeball project
