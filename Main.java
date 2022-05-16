@@ -29,7 +29,7 @@ public class Main extends JFrame implements ActionListener
 		weapons = new ArrayList<Weapon>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
 		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 4000, Color.orange, 30, 40, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sound/t5kemptyreload.wav", 3000, 4000, Color.gray, 5, 60, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, Color.gray, 5, 60, this));
 		equippedWeapon = weapons.get(1);
 		//set up other important stuff
 		player = new Player(0,0);

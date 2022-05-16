@@ -43,7 +43,7 @@ public class Weapon
 
     public void fire()
     {
-        System.out.println("fired");
+        System.out.println("fired. ammo = " + ammo);
         if(ammo > 0)
         {
             try {
@@ -60,7 +60,7 @@ public class Weapon
         else reload(false);
     }
 
-    /*
+    /**
     reload the weapon. if finish is false, then it plays the reload sound and starts the reload timer. if finish is true, then it finishes reloading and adds ammo
      */
     public void reload(boolean finish)
