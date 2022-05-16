@@ -41,9 +41,8 @@ public class Main extends JFrame implements ActionListener
 		setResizable(false);
 		
 		//set up panel
-		p = new MainPanel(player, equippedWeapon);
+		p = new MainPanel(player, equippedWeapon, 600, 600, 50); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
 		add(p);
-		p.setPreferredSize(new Dimension(600,600));
 		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
 		
 		//add key listener
@@ -133,13 +132,19 @@ class MainPanel extends JPanel
 	private boolean mouseDown; //true if mouse is down. false if not
 	private boolean triggerDown; //becomes true when a shot is fired. becomes false when mouseDown = false. used to simulate semi auto fire
 	private double shootTimer; //time since last shot in seconds
+	private int width, height;
+	private int pSize;
 	//set up panel
-	public MainPanel(Player player, Weapon equippedWeapon)
+	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize)
 	{
 		this.player = player;
 		this.equippedWeapon = equippedWeapon;
 		setBackground(Color.lightGray);
 		shootTimer = 0;
+		setPreferredSize(new Dimension(width, height));
+		this.width = width;
+		this.height = height;
+		this.pSize = pSize;
 
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
 		mouseX = 0;
@@ -173,14 +178,14 @@ class MainPanel extends JPanel
 			public void mouseDragged(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
-				angle = Math.atan2(mouseY - 300, mouseX - 300); //note: the 300 comes from the pane size/2
+				angle = Math.atan2(mouseY - height/2, mouseX - width/2);
 			}
 
 			@Override
 			public void mouseMoved(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
-				angle = Math.atan2(mouseY - 300, mouseX - 300);
+				angle = Math.atan2(mouseY - height/2, mouseX - width/2);
 			}
 		});
 	}
@@ -196,20 +201,19 @@ class MainPanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
-
 		//draw player
 		try {
-			//Image image = ImageIO.read(new File("hannkschrader.png")).getScaledInstance(50, 50, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
-			Image image = ImageIO.read(new File("hannkschrader50x50.png"));
-			g.drawImage(image, 275, 275, null);
-		} catch (IOException e) {}
+			Image image = ImageIO.read(new File("hannkschrader50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
+			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
+			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
+		} catch (Exception e) {}
 
 		//draw gun
 		g.setColor(equippedWeapon.getColor());
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setStroke(new BasicStroke(10));
-		final int gunDistance = 20;
-		Line2D gun = new Line2D.Double(gunDistance*Math.cos(angle)+300, gunDistance*Math.sin(angle)+300, (equippedWeapon.getLength()+gunDistance)*Math.cos(angle)+300, (equippedWeapon.getLength()+gunDistance)*Math.sin(angle)+300);
+		g2.setStroke(new BasicStroke(10f * pSize/50));
+		double gunDistance = 20.0 * pSize/50;
+		Line2D gun = new Line2D.Double((gunDistance*Math.cos(angle)+width/2), (gunDistance*Math.sin(angle)+height/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+width/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+height/2));
 		g2.draw(gun);
 
 		//draw walls
