@@ -21,7 +21,6 @@ public class Enemy
 		return y;
 	}
 	
-	//make update() method which moves enemy towards player. if you need wall data or anything like that
-	// Main has getter methods for that
+	//TODO make this class actually work. basically, make an update method that can move this Enemy towards the player.
 
 }

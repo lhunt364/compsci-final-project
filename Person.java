@@ -1,6 +1,7 @@
 
 public class Person
 {
+	//TODO this is kinda a dead class. should be deleted
 	private double x;
 	private double y;
 	

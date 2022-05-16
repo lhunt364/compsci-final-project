@@ -1,7 +1,7 @@
 
 public class Player
 {
-	private int x, y;
+	private int x, y; //note: this is absolute x and y. the player doesnt move around on screen.
 	private int dx, dy;
 	public Player(int x, int y)
 	{
@@ -10,7 +10,7 @@ public class Player
 		this.dx = 0;
 		this.dy = 0;
 	}
-
+	//TODO make player able to take damage. this can be handled a variety of ways, it just has to work decently efficiently.
 
 	public int getDx() {
 		return dx;

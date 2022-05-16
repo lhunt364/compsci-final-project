@@ -1,6 +1,5 @@
 import java.awt.event.*;
 import java.awt.geom.Line2D;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,7 +12,7 @@ import java.awt.*;
 public class Main extends JFrame implements ActionListener
 {
 	private Timer t;
-	private char state; //the current state of the game (m = menu, p = playing)
+	private char state; //the current state of the game (maybe useful for a menu or something)
 
 	private Player player; //the player
 
@@ -22,13 +21,15 @@ public class Main extends JFrame implements ActionListener
 
 	private MainPanel p;
 
+	private double gunVolume; //volume of gun sounds
+
 	public Main()
 	{
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
-		weapons.add(new Weapon("AKM", 50, 600, null, null, null, Color.orange, 30, 40));
-		weapons.add(new Weapon("SIG MCX", 35, 800, null, null, null, Color.darkGray, 30, 30));
-		weapons.add(new Weapon("ORSIS T-5000M", 100, 30, null, null, null, Color.gray, 5, 60));
+		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
+		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", Color.orange, 30, 40, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 100, 30, null, null, null, Color.gray, 5, 60, this));
 		equippedWeapon = weapons.get(0);
 		//set up other important stuff
 		player = new Player(0,0);
@@ -42,6 +43,7 @@ public class Main extends JFrame implements ActionListener
 		p = new MainPanel(player, equippedWeapon);
 		add(p);
 		p.setPreferredSize(new Dimension(600,600));
+		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
 		
 		//add key listener
 		addKeyListener(new KeyListener() {
@@ -57,6 +59,7 @@ public class Main extends JFrame implements ActionListener
 				if(e.getKeyChar() == 's') player.setDy(2);
 				if(e.getKeyChar() == 'a') player.setDx(-2);
 				if(e.getKeyChar() == 'd') player.setDx(2);
+				if(e.getKeyChar() == 'r') equippedWeapon.reload(false);
 				
 			}
 
@@ -93,7 +96,9 @@ public class Main extends JFrame implements ActionListener
 	public void actionPerformed(ActionEvent e) //updates every frame (50fps)
 	{
 		player.update();
+		p.update();
 		p.repaint();
+		//TODO check collision between player & walls & enemies & bullets and stuff
 	}
 
 	//drawing data getters
@@ -104,39 +109,47 @@ public class Main extends JFrame implements ActionListener
 	public ArrayList<Bullet> getBullets() {return p.getBullets();}
 	/**@return ArrayList of all Walls*/
 	public ArrayList<Wall> getWalls() {return p.getWalls();}
+
+	public double getGunVolume() {return gunVolume;}
 }
 
-//the panel that contains everything being drawn (players, enemies, walls, etc.)
+//the panel that contains everything being drawn (players, enemies, walls, etc.) and also handles the mouse/shooting
 @SuppressWarnings("serial")
 class MainPanel extends JPanel
 {
 	private Player player;
 	private int mouseX;
 	private int mouseY;
-	private double angle;
+	private double angle; //the angle the player is firing (<-- useful for making bullets, whoever is doing that)
 	private Weapon equippedWeapon;
+	private boolean mouseDown;
+	private double shootTimer; //time since last shot in seconds
 	//set up panel
 	public MainPanel(Player player, Weapon equippedWeapon)
 	{
 		this.player = player;
 		this.equippedWeapon = equippedWeapon;
 		setBackground(Color.lightGray);
+		shootTimer = 0;
 
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
 		mouseX = 0;
 		mouseY = 0;
+		mouseDown = false;
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e)
 			{
+				mouseDown = true;
 				System.out.println("mouse press at " + e.getX() + " " + e.getY());
-
-
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {}
 			@Override
-			public void mouseReleased(MouseEvent e) {}
+			public void mouseReleased(MouseEvent e)
+			{
+				mouseDown = false;
+			}
 			@Override
 			public void mouseEntered(MouseEvent e) {}
 			@Override
@@ -146,11 +159,14 @@ class MainPanel extends JPanel
 
 		addMouseMotionListener(new MouseMotionListener() {
 			@Override
-			public void mouseDragged(MouseEvent e) {}
+			public void mouseDragged(MouseEvent e) {
+				mouseX = e.getX();
+				mouseY = e.getY();
+				angle = Math.atan2(mouseY - 300, mouseX - 300); //note: the 300 comes from the pane size/2
+			}
 
 			@Override
-			public void mouseMoved(MouseEvent e)
-			{
+			public void mouseMoved(MouseEvent e) {
 				mouseX = e.getX();
 				mouseY = e.getY();
 				angle = Math.atan2(mouseY - 300, mouseX - 300);
@@ -162,7 +178,10 @@ class MainPanel extends JPanel
 	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
 	ArrayList<Wall> walls = new ArrayList<Wall>();
 	ArrayList<Bullet> bullets = new ArrayList<Bullet>();
-	
+
+	/**
+	 Paints pretty much everything i think
+	 */
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
@@ -195,16 +214,32 @@ class MainPanel extends JPanel
 		g.setColor(Color.ORANGE);
 		for(int i = 0; i < bullets.size(); i++)
 		{
+			//TODO draw bullets
 			//g.fillOval();
 		}
 
 		//draw enemies
 		for(int i = 0; i < enemies.size(); i++)
 		{
-
+			//TODO draw enemies
 		}
 
 
+	}
+
+	/**
+	 Handles shooting/making new bullets when necessary
+	 */
+	public void update()
+	{
+		shootTimer -= 0.02;
+		if (shootTimer <= 0 && mouseDown) //if can shoot
+		{
+			equippedWeapon.fire();
+			shootTimer = 60.0/equippedWeapon.getFireRate();
+			//TODO: code to create new bullet
+		}
+		//TODO update bullets and enemy movement here.
 	}
 
 	//panel getters
