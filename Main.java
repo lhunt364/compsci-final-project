@@ -28,9 +28,10 @@ public class Main extends JFrame implements ActionListener
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
-		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 4000, Color.orange, 30, 40, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, Color.gray, 5, 60, this));
-		equippedWeapon = weapons.get(1);
+		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 4000, 0, Color.orange, 30, 40, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
+		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
+		equippedWeapon = weapons.get(2);
 		//set up other important stuff
 		player = new Player(0,0);
 		state = 'm';
@@ -55,11 +56,17 @@ public class Main extends JFrame implements ActionListener
 			public void keyPressed(KeyEvent e) 
 			{
 				System.out.println("pressed: " + e.getKeyChar());
-				if(e.getKeyChar() == 'w') player.setDy(-2);
-				if(e.getKeyChar() == 's') player.setDy(2);
-				if(e.getKeyChar() == 'a') player.setDx(-2);
-				if(e.getKeyChar() == 'd') player.setDx(2);
-				if(e.getKeyChar() == 'r') equippedWeapon.reload(false);
+				char key = e.getKeyChar();
+				if(key == 'w') player.setDy(-2);
+				if(key == 's') player.setDy(2);
+				if(key == 'a') player.setDx(-2);
+				if(key == 'd') player.setDx(2);
+				if(key == 'r') equippedWeapon.reload(false);
+				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this isnt permanent, but is good for testing.
+				{
+					equippedWeapon = weapons.get(Integer.parseInt(key+"") - 1);
+					p.setEquippedWeapon(equippedWeapon);
+				}
 				
 			}
 
@@ -67,10 +74,11 @@ public class Main extends JFrame implements ActionListener
 			public void keyReleased(KeyEvent e) 
 			{
 				System.out.println("released: " + e.getKeyChar());
-				if(e.getKeyChar() == 'w') player.setDy(0);
-				if(e.getKeyChar() == 's') player.setDy(0);
-				if(e.getKeyChar() == 'a') player.setDx(0);
-				if(e.getKeyChar() == 'd') player.setDx(0);
+				char key = e.getKeyChar();
+				if(key == 'w') player.setDy(0);
+				if(key == 's') player.setDy(0);
+				if(key == 'a') player.setDx(0);
+				if(key == 'd') player.setDx(0);
 
 			}
 			
@@ -122,7 +130,8 @@ class MainPanel extends JPanel
 	private int mouseY;
 	private double angle; //the angle the player is firing (<-- useful for making bullets, whoever is doing that)
 	private Weapon equippedWeapon;
-	private boolean mouseDown;
+	private boolean mouseDown; //true if mouse is down. false if not
+	private boolean triggerDown; //becomes true when a shot is fired. becomes false when mouseDown = false. used to simulate semi auto fire
 	private double shootTimer; //time since last shot in seconds
 	//set up panel
 	public MainPanel(Player player, Weapon equippedWeapon)
@@ -136,6 +145,7 @@ class MainPanel extends JPanel
 		mouseX = 0;
 		mouseY = 0;
 		mouseDown = false;
+		triggerDown = false;
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mousePressed(MouseEvent e)
@@ -149,6 +159,7 @@ class MainPanel extends JPanel
 			public void mouseReleased(MouseEvent e)
 			{
 				mouseDown = false;
+				triggerDown = false;
 			}
 			@Override
 			public void mouseEntered(MouseEvent e) {}
@@ -233,14 +244,17 @@ class MainPanel extends JPanel
 	public void update()
 	{
 		shootTimer -= 0.02;
-		if (shootTimer <= 0 && mouseDown) //if can shoot
+		if (shootTimer <= 0 && mouseDown && !equippedWeapon.getReloading() &&((equippedWeapon.getFireMode() == 1 && !triggerDown) || equippedWeapon.getFireMode() == 0)) //if can shoot
 		{
 			equippedWeapon.fire();
+			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
 			//TODO: code to create new bullet
 		}
 		//TODO update bullets and enemy movement here.
 	}
+
+	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
 
 	//panel getters
 	public ArrayList<Enemy> getEnemies() {return enemies;}

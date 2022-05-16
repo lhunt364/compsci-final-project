@@ -15,6 +15,7 @@ public class Weapon
     private String emptyReloadSound; //reload sound (when ammo == 0)
     private int reloadTime;
     private int emptyReloadTime;
+    private int fireMode; //0 = full auto. 1 = semi auto.
     private Color color; //color of the representation of the gun
     private int magSize; //size of the magazine of the gun
     private int ammo; //current ammo count (0 to magSize+1)
@@ -22,7 +23,7 @@ public class Weapon
     private boolean reloading; //true if reloading, false if not
     private Main main;
 
-    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, int reloadTime, int emptyReloadTime, Color color, int magSize, int length, Main main)
+    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, int reloadTime, int emptyReloadTime, int fireMode, Color color, int magSize, int length, Main main)
     {
         this.name = name;
         this.dmg = dmg;
@@ -32,6 +33,7 @@ public class Weapon
         this.emptyReloadSound = emptyReloadSound;
         this.reloadTime = reloadTime;
         this.emptyReloadTime = emptyReloadTime;
+        this.fireMode = fireMode;
         this.color = color;
         this.magSize = magSize;
         this.length = length;
@@ -135,4 +137,8 @@ public class Weapon
     public int getFireRate() {
         return fireRate;
     }
+
+    public int getFireMode() {return fireMode;}
+
+    public boolean getReloading() {return reloading;}
 }
