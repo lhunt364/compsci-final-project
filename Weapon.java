@@ -13,6 +13,8 @@ public class Weapon
     private String[] fireSounds; //fire sound
     private String reloadSound; //reload sound (when ammo > 0)
     private String emptyReloadSound; //reload sound (when ammo == 0)
+    private int reloadTime;
+    private int emptyReloadTime;
     private Color color; //color of the representation of the gun
     private int magSize; //size of the magazine of the gun
     private int ammo; //current ammo count (0 to magSize+1)
@@ -20,7 +22,7 @@ public class Weapon
     private boolean reloading; //true if reloading, false if not
     private Main main;
 
-    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, Color color, int magSize, int length, Main main)
+    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, int reloadTime, int emptyReloadTime, Color color, int magSize, int length, Main main)
     {
         this.name = name;
         this.dmg = dmg;
@@ -28,6 +30,8 @@ public class Weapon
         this.fireSounds = fireSounds;
         this.reloadSound = reloadSound;
         this.emptyReloadSound = emptyReloadSound;
+        this.reloadTime = reloadTime;
+        this.emptyReloadTime = emptyReloadTime;
         this.color = color;
         this.magSize = magSize;
         this.length = length;
@@ -74,7 +78,7 @@ public class Weapon
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                     gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()));
                     clip.start();
-                    reloadWait(4000, this);
+                    reloadWait(emptyReloadTime, this);
                 } catch (Exception e) {}
             }
         }
@@ -90,7 +94,7 @@ public class Weapon
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                     gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()));
                     clip.start();
-                    reloadWait(3000, this);
+                    reloadWait(reloadTime, this);
                 } catch (Exception e) {}
             }
         }
