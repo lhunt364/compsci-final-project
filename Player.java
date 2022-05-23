@@ -1,7 +1,8 @@
 
 public class Player
 {
-	private int x, y; //note: this is absolute x and y. the player doesnt move around on screen.
+	private static int x;
+	private static int y; //note: this is absolute x and y. the player doesnt move around on screen.
 	private int dx, dy;
 	public Player(int x, int y)
 	{
@@ -28,9 +29,9 @@ public class Player
 		this.dy = dy;
 	}
 
-	public int getX() {return x;}
+	public static int getX() {return x;}
 
-	public int getY() {return y;}
+	public static int getY() {return y;}
 
 	//make move methods
 	public void update()
