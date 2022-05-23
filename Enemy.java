@@ -1,12 +1,26 @@
 
-public class Enemy extends Person
+public class Enemy
 {
+	private double x;
+	private double y;
+
 
 	public Enemy(int x, int y) 
 	{
-		super(x, y);
+		this.x = x;
+		this.y = y;
+	}
+
+	public double getX()
+	{
+		return x;
+	}
+
+	public double getY()
+	{
+		return y;
 	}
 	
-	//make enemy shoot stuff (:
+	//TODO make this class actually work. basically, make an update method that can move this Enemy towards the player.
 
 }
