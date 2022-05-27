@@ -5,6 +5,8 @@ public class Enemy
 	private double y;
 
 	private double speed;
+
+	//TODO give enemies health so that they can die, as well making some way for an enemy to remove itself from the enemies ArrayList in Main when it dies.
 	public Enemy(int x, int y, double speed)
 	{
 		this.x = x;
@@ -31,7 +33,7 @@ public class Enemy
 	}
 
 	//TODO make this class actually work. basically, make an update method that can move this Enemy towards the player.
-	/*public void update(){
+	public void update(){
 
 		int playerX = Player.getX();
 		int playerY = Player.getY();
@@ -44,6 +46,6 @@ public class Enemy
 		x += speed * Math.cos(angle);
 		y += speed * Math.sin(angle);
 }
-*/
+
 
 	}

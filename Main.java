@@ -17,7 +17,6 @@ import java.awt.*;
 public class Main extends JFrame implements ActionListener
 {
 	private Timer t;
-	private char state; //the current state of the game (maybe useful for a menu or something)
 
 	private Player player; //the player
 
@@ -28,6 +27,7 @@ public class Main extends JFrame implements ActionListener
 
 	private double gunVolume; //volume of gun sounds
 
+	//TODO keep track of how many enemies have been killed so that a score can be calculated.
 	public Main()
 	{
 		
@@ -40,7 +40,6 @@ public class Main extends JFrame implements ActionListener
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
 		player = new Player(300,300);
-		state = 'm';
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -111,7 +110,6 @@ public class Main extends JFrame implements ActionListener
 		player.update();
 		p.update();
 		p.repaint();
-		//TODO check collision between player & walls & enemies & bullets and stuff
 	}
 
 	//drawing data getters
@@ -201,6 +199,7 @@ class MainPanel extends JPanel
 			}
 		});
 
+		//TODO add walls to make an actual map
 		//define things to draw
 		walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <-------------------------
 
@@ -236,16 +235,14 @@ class MainPanel extends JPanel
 		g2.setStroke(new BasicStroke(10f * pSize / 50));
 		double gunDistance = 20.0 * pSize / 50;
 		Line2D gun = new Line2D.Double((gunDistance * Math.cos(angle) + width / 2), (gunDistance * Math.sin(angle) + height / 2), ((equippedWeapon.getLength() * (pSize / 50.0) + gunDistance) * Math.cos(angle) + width / 2), ((equippedWeapon.getLength() * (pSize / 50.0) + gunDistance) * Math.sin(angle) + height / 2));
-
-
-
-
+		g2.draw(gun);
 
 		//Testing random stuff most not working
 		//test in progress- trying to use photo for gun
 		try {
 			Image image = ImageIO.read(new File("AR.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
 			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
+
 			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
 			double rotationRequired = Math.toRadians (angle);
 			double locationX = 125/ 2;
@@ -267,10 +264,6 @@ class MainPanel extends JPanel
 		} catch (Exception e) {
 		}
 
-
-
-		g2.draw(gun);
-
 		//draw bullets
 		g.setColor(Color.ORANGE);
 		for(int i = 0; i < bullets.size(); i++)
@@ -289,7 +282,7 @@ class MainPanel extends JPanel
 	}
 
 	/**
-	 Handles shooting/making new bullets when necessary
+	 Handles shooting/making new bullets when necessary/updating bullets and enemies
 	 */
 	public void update()
 	{
@@ -299,15 +292,20 @@ class MainPanel extends JPanel
 			if (equippedWeapon.fire())
 			{
 				double gunDistance = 20.0 * pSize/50;
-				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+width/2), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+height/2), 15, angle));
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 15, angle));
 			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
 		}
-		//TODO update enemy movement here.
+
 		for(int i = 0; i < bullets.size(); i++)
 		{
 			bullets.get(i).update();
+		}
+
+		for(int i = 0; i < enemies.size(); i++)
+		{
+			enemies.get(i).update();
 		}
 	}
 
