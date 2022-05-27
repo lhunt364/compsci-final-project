@@ -40,7 +40,6 @@ public class Weapon
         ammo = magSize + 1;
         reloading = false;
         this.main = main;
-
     }
 
     /**
