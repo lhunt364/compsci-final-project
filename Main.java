@@ -1,5 +1,10 @@
 import java.awt.event.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,6 +30,7 @@ public class Main extends JFrame implements ActionListener
 
 	public Main()
 	{
+		
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
@@ -205,8 +211,7 @@ class MainPanel extends JPanel
 	/**
 	 Paints pretty much everything i think
 	 */
-	protected void paintComponent(Graphics g)
-	{
+	protected void paintComponent(Graphics g) {
 		super.paintComponent(g);
 
 		//draw walls
@@ -222,14 +227,48 @@ class MainPanel extends JPanel
 			Image image = ImageIO.read(new File("hannkschrader50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
 			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
 			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
-		} catch (Exception e) {}
+		} catch (Exception e) {
+		}
 
 		//draw gun
 		g.setColor(equippedWeapon.getColor());
 		Graphics2D g2 = (Graphics2D) g;
-		g2.setStroke(new BasicStroke(10f * pSize/50));
-		double gunDistance = 20.0 * pSize/50;
-		Line2D gun = new Line2D.Double((gunDistance*Math.cos(angle)+width/2), (gunDistance*Math.sin(angle)+height/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+width/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+height/2));
+		g2.setStroke(new BasicStroke(10f * pSize / 50));
+		double gunDistance = 20.0 * pSize / 50;
+		Line2D gun = new Line2D.Double((gunDistance * Math.cos(angle) + width / 2), (gunDistance * Math.sin(angle) + height / 2), ((equippedWeapon.getLength() * (pSize / 50.0) + gunDistance) * Math.cos(angle) + width / 2), ((equippedWeapon.getLength() * (pSize / 50.0) + gunDistance) * Math.sin(angle) + height / 2));
+
+
+
+
+
+		//Testing random stuff most not working
+		//test in progress- trying to use photo for gun
+		try {
+			Image image = ImageIO.read(new File("AR.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
+			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
+			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
+			double rotationRequired = Math.toRadians (angle);
+			double locationX = 125/ 2;
+			double locationY = 50/ 2;
+			AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+			int drawLocationX = 300;
+			int drawLocationY = 300;
+// Drawing the rotated image at the required drawing locations
+			g.drawImage(op.filter((BufferedImage) image, null), drawLocationX, drawLocationY, null);
+//			AffineTransform at = AffineTransform.getTranslateInstance(image.getWidth(null), image.getHeight(null));
+//			at.rotate(image.getWidth(null)/2, image.getHeight(null)/2);
+//			Graphics2D g2d = (Graphics2D) g;
+//			g2d.drawImage(image, at, null);
+
+
+
+			// g.drawImage(image, (int)(gunDistance * Math.cos(angle) + width / 2), (int)(gunDistance * Math.sin(angle) + height / 2), null);
+		} catch (Exception e) {
+		}
+
+
+
 		g2.draw(gun);
 
 		//draw bullets

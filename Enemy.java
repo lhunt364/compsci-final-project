@@ -31,7 +31,7 @@ public class Enemy
 	}
 
 	//TODO make this class actually work. basically, make an update method that can move this Enemy towards the player.
-	public void update(){
+	/*public void update(){
 
 		int playerX = Player.getX();
 		int playerY = Player.getY();
@@ -43,5 +43,7 @@ public class Enemy
 
 		x += speed * Math.cos(angle);
 		y += speed * Math.sin(angle);
-	}
 }
+*/
+
+	}
