@@ -196,7 +196,7 @@ class MainPanel extends JPanel
 		});
 
 		//define things to draw
-		walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <------------------------
+		walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <-------------------------
 
 	}
 	
