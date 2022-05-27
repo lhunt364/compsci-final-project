@@ -15,10 +15,14 @@ public class Bullet extends JComponent
     private int dy;
 
     private int speed;
-    private int angle;
-    public Bullet(int x,int y)
+    private double angle;
+    public Bullet(int x,int y, int speed, double angle)
     {
+        this.speed = speed;
+        this.angle = angle;
         this.setLocation(x,y);
+        dx = (int)(Math.cos(angle) * speed);
+        dy = (int)(Math.sin(angle) * speed);
         this.setSize(15,15);
 
         b = new Ellipse2D.Double(0,0,14,14);

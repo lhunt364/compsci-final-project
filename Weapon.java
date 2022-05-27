@@ -43,7 +43,11 @@ public class Weapon
 
     }
 
-    public void fire()
+    /**
+     * simulates firing the weapon
+     * @return true if fired. false if started a reload
+     */
+    public boolean fire()
     {
         System.out.println("fired. ammo = " + ammo);
         if(ammo > 0)
@@ -58,8 +62,10 @@ public class Weapon
                 clip.start();
             } catch (Exception e) {}
             ammo--;
+            return true;
         }
         else reload(false);
+        return false;
     }
 
     /**

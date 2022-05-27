@@ -6,7 +6,7 @@ public class Wall
 	private int height;
 	private int width;
 
-	public Wall(int x, int y, int length, int height)
+	public Wall(int x, int y, int width, int height)
 	{
 		this.x = x;
 		this.y = y;

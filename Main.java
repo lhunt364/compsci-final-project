@@ -28,12 +28,12 @@ public class Main extends JFrame implements ActionListener
 		//set up weapons
 		weapons = new ArrayList<Weapon>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
-		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 4000, 0, Color.orange, 30, 40, this));
+		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
 		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
-		player = new Player(0,0);
+		player = new Player(300,300);
 		state = 'm';
 		//set up frame stuff
 		setBounds(100,100,600,600);
@@ -134,6 +134,12 @@ class MainPanel extends JPanel
 	private double shootTimer; //time since last shot in seconds
 	private int width, height;
 	private int pSize;
+
+	//stuff to draw
+	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
+	private ArrayList<Wall> walls = new ArrayList<Wall>();
+	private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+
 	//set up panel
 	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize)
 	{
@@ -188,12 +194,13 @@ class MainPanel extends JPanel
 				angle = Math.atan2(mouseY - height/2, mouseX - width/2);
 			}
 		});
+
+		//define things to draw
+		walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <------------------------
+
 	}
 	
 	//draw stuff
-	ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-	ArrayList<Wall> walls = new ArrayList<Wall>();
-	ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 
 	/**
 	 Paints pretty much everything i think
@@ -201,6 +208,15 @@ class MainPanel extends JPanel
 	protected void paintComponent(Graphics g)
 	{
 		super.paintComponent(g);
+
+		//draw walls
+		g.setColor(Color.BLUE);
+		for(int i = 0; i < walls.size(); i++)
+		{
+			Wall wall = walls.get(i);
+			g.fillRect(wall.getX() - player.getX() + (width / 2), wall.getY() - player.getY() + (height / 2), wall.getWidth(), wall.getHeight());
+		}
+
 		//draw player
 		try {
 			Image image = ImageIO.read(new File("hannkschrader50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
@@ -216,21 +232,12 @@ class MainPanel extends JPanel
 		Line2D gun = new Line2D.Double((gunDistance*Math.cos(angle)+width/2), (gunDistance*Math.sin(angle)+height/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+width/2), ((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+height/2));
 		g2.draw(gun);
 
-		//draw walls
-		g.setColor(Color.BLUE);
-		for(int i = 0; i < walls.size(); i++)
-		{
-			Wall wall = walls.get(i);
-			g.drawRect(wall.getX(), wall.getY(), wall.getWidth(), wall.getHeight());
-
-		}
-
 		//draw bullets
 		g.setColor(Color.ORANGE);
 		for(int i = 0; i < bullets.size(); i++)
 		{
-			//TODO draw bullets
-			//g.fillOval();
+			Bullet bullet = bullets.get(i);
+			g.fillOval(bullet.getX() - player.getX() + (width / 2), bullet.getY() - player.getY() + (height / 2), 10, 10);
 		}
 
 		//draw enemies
@@ -250,12 +257,19 @@ class MainPanel extends JPanel
 		shootTimer -= 0.02;
 		if (shootTimer <= 0 && mouseDown && !equippedWeapon.getReloading() &&((equippedWeapon.getFireMode() == 1 && !triggerDown) || equippedWeapon.getFireMode() == 0)) //if can shoot
 		{
-			equippedWeapon.fire();
+			if (equippedWeapon.fire())
+			{
+				double gunDistance = 20.0 * pSize/50;
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+width/2), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+height/2), 15, angle));
+			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
-			//TODO: code to create new bullet
 		}
-		//TODO update bullets and enemy movement here.
+		//TODO update enemy movement here.
+		for(int i = 0; i < bullets.size(); i++)
+		{
+			bullets.get(i).update();
+		}
 	}
 
 	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
