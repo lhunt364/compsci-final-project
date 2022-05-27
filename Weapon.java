@@ -115,7 +115,6 @@ public class Weapon
             try {
                 reloading = true;
                 Thread.sleep(millis);
-                System.out.println("joe");
                 reloading = false;
                 weapon.reload(true);
             } catch (InterruptedException e) {}
