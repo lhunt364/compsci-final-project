@@ -42,7 +42,7 @@ public class Main extends JFrame implements ActionListener
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
-		map = "maptest";
+		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
 		player = new Player(temp[2],temp[3]);
 		//set up frame stuff
