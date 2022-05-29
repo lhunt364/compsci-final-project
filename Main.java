@@ -43,18 +43,21 @@ public class Main extends JFrame implements ActionListener
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
 		map = "maptest";
-		int[] temp = MapReadWrite.readBorders(map);
+		int[] temp = MapReadWrite.readBorders(map); //peas and carrots work with a cherry on top
+		//int[] temp = {0,0,100,100};
+		System.out.println(temp[2] + " " + temp[3]);
 		player = new Player(temp[2],temp[3]);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
 		setResizable(false);
-		
+
 		//set up panel
+
 		p = new MainPanel(player, equippedWeapon, 600, 600, 50, map); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
 		add(p);
 		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
-		
+
 		//add key listener
 		addKeyListener(new KeyListener() {
 
@@ -98,7 +101,7 @@ public class Main extends JFrame implements ActionListener
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 		//timer
 		t = new Timer(20, this);
 		t.start();
@@ -168,6 +171,8 @@ class MainPanel extends JPanel
 		this.enemies = new ArrayList<>();
 		this.bullets = new ArrayList<>(); */
 		this.map = map;
+		this.mapWidth = 100;
+		this.mapHeight = 100;
 		loadMap(map);
 
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
@@ -334,6 +339,7 @@ class MainPanel extends JPanel
 		int[] temp = MapReadWrite.readBorders(map);
 		mapWidth = temp[0];
 		mapHeight = temp[1];
+		System.out.println(walls.size());
 
 	}
 

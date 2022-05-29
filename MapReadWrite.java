@@ -3,6 +3,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public abstract class MapReadWrite
@@ -16,7 +17,7 @@ public abstract class MapReadWrite
     public static ArrayList<Wall> readWalls(String map)
     {
         ArrayList<Wall> ret = new ArrayList<>();
-        Scanner readMap = null;
+        Scanner readMap;
         try {
             readMap = new Scanner(new File("maps/" + map + ".txt"));
         } catch (FileNotFoundException e) {
@@ -24,21 +25,19 @@ public abstract class MapReadWrite
         }
 
         readMap.next(); //skip first line
-        String temp = readMap.nextLine(); //n-n-n-n-
+
         while(readMap.hasNext())
         {
-            if(temp != "")
-            {
-                int x = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
-                temp = temp.substring(temp.indexOf("-")+1);
-                int y = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
-                temp = temp.substring(temp.indexOf("-")+1);
-                int width = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
-                temp = temp.substring(temp.indexOf("-")+1);
-                int height = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
-
-                ret.add(new Wall(x, y, width, height));
-            }
+            String temp = readMap.next();
+            int x = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
+            temp = temp.substring(temp.indexOf("-")+1);
+            int y = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
+            temp = temp.substring(temp.indexOf("-")+1);
+            int width = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
+            temp = temp.substring(temp.indexOf("-")+1);
+            int height = Integer.parseInt(temp.substring(0, temp.indexOf("-")));
+            //System.out.println(x + " " + y + " " + width + " " + height);
+            ret.add(new Wall(x, y, width, height));
         }
 
         readMap.close();
@@ -52,7 +51,7 @@ public abstract class MapReadWrite
      */
     public static int[] readBorders(String map)
     {
-        Scanner readMap = null;
+        Scanner readMap;
         try {
             readMap = new Scanner(new File("maps/" + map + ".txt"));
         } catch (FileNotFoundException e) {
