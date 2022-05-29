@@ -7,6 +7,7 @@ import java.awt.image.ImageObserver;
 import java.awt.image.ImageProducer;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Array;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -27,29 +28,34 @@ public class Main extends JFrame implements ActionListener
 
 	private double gunVolume; //volume of gun sounds
 
+	private String map; //current map
+
 	//TODO keep track of how many enemies have been killed so that a score can be calculated.
 	public Main()
 	{
 		
 		//set up weapons
-		weapons = new ArrayList<Weapon>();
+		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
 		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
 		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
-		player = new Player(300,300);
+		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
+		int[] temp = MapReadWrite.readBorders(map);
+		player = new Player(temp[2],temp[3]);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
 		setResizable(false);
-		
+
 		//set up panel
-		p = new MainPanel(player, equippedWeapon, 600, 600, 50); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
+
+		p = new MainPanel(player, equippedWeapon, 600, 600, 50, map); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
 		add(p);
 		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
-		
+
 		//add key listener
 		addKeyListener(new KeyListener() {
 
@@ -66,7 +72,7 @@ public class Main extends JFrame implements ActionListener
 				if(key == 'a') player.setDx(-2);
 				if(key == 'd') player.setDx(2);
 				if(key == 'r') equippedWeapon.reload(false);
-				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this isnt permanent, but is good for testing.
+				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this probably isnt permanent, but is good for testing.
 				{
 					equippedWeapon = weapons.get(Integer.parseInt(key+"") - 1);
 					p.setEquippedWeapon(equippedWeapon);
@@ -93,7 +99,7 @@ public class Main extends JFrame implements ActionListener
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
 		//timer
 		t = new Timer(20, this);
 		t.start();
@@ -140,12 +146,15 @@ class MainPanel extends JPanel
 	private int pSize;
 
 	//stuff to draw
-	private ArrayList<Enemy> enemies = new ArrayList<Enemy>();
-	private ArrayList<Wall> walls = new ArrayList<Wall>();
-	private ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+	private ArrayList<Enemy> enemies = new ArrayList<>();
+	private ArrayList<Wall> walls = new ArrayList<>();
+	private ArrayList<Bullet> bullets = new ArrayList<>();
+	private String map;
+	private int mapWidth;
+	private int mapHeight;
 
 	//set up panel
-	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize)
+	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize, String map)
 	{
 		this.player = player;
 		this.equippedWeapon = equippedWeapon;
@@ -155,6 +164,14 @@ class MainPanel extends JPanel
 		this.width = width;
 		this.height = height;
 		this.pSize = pSize;
+		/*
+		this.walls = new ArrayList<>();
+		this.enemies = new ArrayList<>();
+		this.bullets = new ArrayList<>(); */
+		this.map = map;
+		this.mapWidth = 100;
+		this.mapHeight = 100;
+		loadMap(map);
 
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
 		mouseX = 0;
@@ -201,7 +218,8 @@ class MainPanel extends JPanel
 
 		//TODO add walls to make an actual map
 		//define things to draw
-		walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <-------------------------
+		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
+		enemies.add(new Enemy(50,50,1));
 
 	}
 	
@@ -239,6 +257,7 @@ class MainPanel extends JPanel
 
 		//Testing random stuff most not working
 		//test in progress- trying to use photo for gun
+		/*
 		try {
 			Image image = ImageIO.read(new File("AR.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
 			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
@@ -263,6 +282,7 @@ class MainPanel extends JPanel
 			// g.drawImage(image, (int)(gunDistance * Math.cos(angle) + width / 2), (int)(gunDistance * Math.sin(angle) + height / 2), null);
 		} catch (Exception e) {
 		}
+		/**/
 
 		//draw bullets
 		g.setColor(Color.ORANGE);
@@ -275,9 +295,13 @@ class MainPanel extends JPanel
 		//draw enemies
 		for(int i = 0; i < enemies.size(); i++)
 		{
-			//TODO draw enemies
+			try {
+				Image image = ImageIO.read(new File("gustavo50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH);
+				Enemy temp = enemies.get(i);
+				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
+			} catch (Exception e) {
+			}
 		}
-
 
 	}
 
@@ -309,12 +333,30 @@ class MainPanel extends JPanel
 		}
 	}
 
+	/**
+	 * Sets instance variables given a map name
+	 */
+	public void loadMap(String map)
+	{
+		walls = MapReadWrite.readWalls(map);
+		int[] temp = MapReadWrite.readBorders(map);
+		mapWidth = temp[0];
+		mapHeight = temp[1];
+		walls.add(new Wall(-1*mapWidth, -1*mapHeight, mapWidth, 3*mapHeight)); //left border
+		walls.add(new Wall(mapWidth, -1*mapHeight, mapWidth, 3*mapHeight)); //right border
+		walls.add(new Wall(0, -1*mapHeight, mapWidth, mapHeight)); //top border
+		walls.add(new Wall(0, mapHeight, mapWidth, mapHeight)); //bottom border
+		System.out.println(walls.size());
+
+	}
+
 	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
 
 	//panel getters
 	public ArrayList<Enemy> getEnemies() {return enemies;}
 	public ArrayList<Bullet> getBullets() {return bullets;}
 	public ArrayList<Wall> getWalls() {return walls;}
+	public int getPSize() {return pSize;}
 	
 	
 	

@@ -3,7 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public abstract class MapReadWrite
@@ -81,7 +80,7 @@ public abstract class MapReadWrite
      * @param spawnX the X of player spawn
      * @param spawnY the Y of player spawn
      */
-    public static void writeMap(String map, ArrayList<Wall> walls, int width, int height, int spawnX, int spawnY)
+    public static void writeMap(String map, ArrayList<Wall> walls, int width, int height, int spawnX, int spawnY) //this probably wont be used but wrote this for later just in case
     {
         String temp;
         File file = new File("maps/" + map + ".txt");
