@@ -218,7 +218,8 @@ class MainPanel extends JPanel
 
 		//TODO add walls to make an actual map
 		//define things to draw
-		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD WALLS HERE <-------------------------
+		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
+		enemies.add(new Enemy(50,50,1));
 
 	}
 	
@@ -294,9 +295,13 @@ class MainPanel extends JPanel
 		//draw enemies
 		for(int i = 0; i < enemies.size(); i++)
 		{
-			//TODO draw enemies
+			try {
+				Image image = ImageIO.read(new File("gustavo50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH);
+				Enemy temp = enemies.get(i);
+				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
+			} catch (Exception e) {
+			}
 		}
-
 
 	}
 
