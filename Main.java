@@ -43,9 +43,7 @@ public class Main extends JFrame implements ActionListener
 		equippedWeapon = weapons.get(2);
 		//set up other important stuff
 		map = "maptest";
-		int[] temp = MapReadWrite.readBorders(map); //peas and carrots work with a cherry on top
-		//int[] temp = {0,0,100,100};
-		System.out.println(temp[2] + " " + temp[3]);
+		int[] temp = MapReadWrite.readBorders(map);
 		player = new Player(temp[2],temp[3]);
 		//set up frame stuff
 		setBounds(100,100,600,600);
@@ -339,6 +337,10 @@ class MainPanel extends JPanel
 		int[] temp = MapReadWrite.readBorders(map);
 		mapWidth = temp[0];
 		mapHeight = temp[1];
+		walls.add(new Wall(-1*mapWidth, -1*mapHeight, mapWidth, 3*mapHeight)); //left border
+		walls.add(new Wall(mapWidth, -1*mapHeight, mapWidth, 3*mapHeight)); //right border
+		walls.add(new Wall(0, -1*mapHeight, mapWidth, mapHeight)); //top border
+		walls.add(new Wall(0, mapHeight, mapWidth, mapHeight)); //bottom border
 		System.out.println(walls.size());
 
 	}

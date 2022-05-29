@@ -1,0 +1,5 @@
+mapWidth-mapHeight-spawnX-spawnY- //the first line contains the width and height of the map, and the x and y coords of the player's spawn. each has a '-' after it
+x-y-width-height- //every other line contains the information for a wall.
+                  //DO NOT leave gaps between lines or MapReadWrite.readWalls() will break because i didnt do a good job making it bulletproof. TODO make MapReadWrite.readWalls() handle errors in map files better
+x-y-width-height-
+x-y-width-height-
