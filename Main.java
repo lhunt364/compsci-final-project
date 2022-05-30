@@ -303,6 +303,14 @@ class MainPanel extends JPanel
 			}
 		}
 
+		//draw other UI
+		//draw ammo count
+		if(equippedWeapon.getAmmo() >= equippedWeapon.getMagSize()/2) g.setColor(Color.GREEN);
+		else if(equippedWeapon.getAmmo() >= equippedWeapon.getMagSize()/4) g.setColor(Color.YELLOW);
+		else g.setColor(Color.RED);
+		g.setFont(new Font("Monospaced", Font.BOLD, 50));
+		g.drawString(String.format("%02d", equippedWeapon.getAmmo()), width - 100, height - 50);
+
 	}
 
 	/**
