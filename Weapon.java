@@ -145,4 +145,8 @@ public class Weapon
     public int getFireMode() {return fireMode;}
 
     public boolean getReloading() {return reloading;}
+
+    public int getAmmo() {return ammo;}
+
+    public int getMagSize() {return magSize;}
 }
