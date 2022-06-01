@@ -14,7 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial")	
 public class Main extends JFrame implements ActionListener
 {
 	private Timer t;
