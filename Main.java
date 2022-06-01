@@ -67,10 +67,10 @@ public class Main extends JFrame implements ActionListener
 			{
 				System.out.println("pressed: " + e.getKeyChar());
 				char key = e.getKeyChar();
-				if(key == 'w') player.setDy(-2);
-				if(key == 's') player.setDy(2);
-				if(key == 'a') player.setDx(-2);
-				if(key == 'd') player.setDx(2);
+				if(key == 'w') player.setDy(-3);
+				if(key == 's') player.setDy(3);
+				if(key == 'a') player.setDx(-3);
+				if(key == 'd') player.setDx(3);
 				if(key == 'r') equippedWeapon.reload(false);
 				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this probably isnt permanent, but is good for testing.
 				{
@@ -232,7 +232,7 @@ class MainPanel extends JPanel
 		super.paintComponent(g);
 
 		//draw walls
-		g.setColor(Color.BLUE);
+		g.setColor(Color.BLACK);
 		for(int i = 0; i < walls.size(); i++)
 		{
 			Wall wall = walls.get(i);
@@ -258,30 +258,30 @@ class MainPanel extends JPanel
 		//Testing random stuff most not working
 		//test in progress- trying to use photo for gun
 		/*
-		try {
-			Image image = ImageIO.read(new File("AR.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
-			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
+//		try {
+//			Image image = ImageIO.read(new File("AR.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH); //this scales a given image. could be useful if we want to make the window resizable but honestly is a pain
+//			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
+//
+//			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
+//			double rotationRequired = Math.toRadians (angle);
+//			double locationX = 125/ 2;
+//			double locationY = 50/ 2;
+//			AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
+//			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+//			int drawLocationX = 300;
+//			int drawLocationY = 300;
+//// Drawing the rotated image at the required drawing locations
+//			g.drawImage(op.filter((BufferedImage) image, null), drawLocationX, drawLocationY, null);
+////			AffineTransform at = AffineTransform.getTranslateInstance(image.getWidth(null), image.getHeight(null));
+////			at.rotate(image.getWidth(null)/2, image.getHeight(null)/2);
+////		dd	Graphics2D g2d = (Graphics2D) g;
+////			g2d.drawImage(image, at, null);
 
-			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
-			double rotationRequired = Math.toRadians (angle);
-			double locationX = 125/ 2;
-			double locationY = 50/ 2;
-			AffineTransform tx = AffineTransform.getRotateInstance(rotationRequired, locationX, locationY);
-			AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
-			int drawLocationX = 300;
-			int drawLocationY = 300;
-// Drawing the rotated image at the required drawing locations
-			g.drawImage(op.filter((BufferedImage) image, null), drawLocationX, drawLocationY, null);
-//			AffineTransform at = AffineTransform.getTranslateInstance(image.getWidth(null), image.getHeight(null));
-//			at.rotate(image.getWidth(null)/2, image.getHeight(null)/2);
-//			Graphics2D g2d = (Graphics2D) g;
-//			g2d.drawImage(image, at, null);
 
 
-
-			// g.drawImage(image, (int)(gunDistance * Math.cos(angle) + width / 2), (int)(gunDistance * Math.sin(angle) + height / 2), null);
-		} catch (Exception e) {
-		}
+//			// g.drawImage(image, (int)(gunDistance * Math.cos(angle) + width / 2), (int)(gunDistance * Math.sin(angle) + height / 2), null);
+//		} catch (Exception e) {
+//		}
 		/**/
 
 		//draw bullets
@@ -324,7 +324,7 @@ class MainPanel extends JPanel
 			if (equippedWeapon.fire())
 			{
 				double gunDistance = 20.0 * pSize/50;
-				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 15, angle));
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle));
 			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
