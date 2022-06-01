@@ -18,7 +18,7 @@ import java.awt.*;
 public class Main extends JFrame implements ActionListener
 {
 	private Timer t;
-
+	//Alex Test
 	private Player player; //the player
 
 	private Weapon equippedWeapon;
