@@ -6,12 +6,17 @@ public class Enemy
 
 	private double speed;
 
+	private int maxHealth;
+	private int health;
+
 	//TODO give enemies health so that they can die, as well making some way for an enemy to remove itself from the enemies ArrayList in Main when it dies.
-	public Enemy(int x, int y, double speed)
+	public Enemy(int x, int y, double speed, int maxHealth)
 	{
 		this.x = x;
 		this.y = y;
 		this.speed = speed;
+		this.maxHealth = maxHealth;
+		this.health = maxHealth;
 	}
 
 	public double getX()
@@ -23,6 +28,10 @@ public class Enemy
 	{
 		return y;
 	}
+
+	public int getHealth() {return health;}
+
+	public int getMaxHealth() {return maxHealth;}
 
 	public void setX(double x) {
 		this.x = x;
