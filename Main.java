@@ -44,7 +44,7 @@ public class Main extends JFrame implements ActionListener
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3]);
+		player = new Player(temp[2],temp[3], this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -52,7 +52,7 @@ public class Main extends JFrame implements ActionListener
 
 		//set up panel
 
-		p = new MainPanel(player, equippedWeapon, 600, 600, 50, map); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
+		p = new MainPanel(player, equippedWeapon, 600, 600, 50, map, this); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
 		add(p);
 		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
 
@@ -144,6 +144,7 @@ class MainPanel extends JPanel
 	private double shootTimer; //time since last shot in seconds
 	private int width, height;
 	private int pSize;
+	private Main main;
 
 	//stuff to draw
 	private ArrayList<Enemy> enemies = new ArrayList<>();
@@ -154,7 +155,7 @@ class MainPanel extends JPanel
 	private int mapHeight;
 
 	//set up panel
-	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize, String map)
+	public MainPanel(Player player, Weapon equippedWeapon, int width, int height, int pSize, String map, Main main)
 	{
 		this.player = player;
 		this.equippedWeapon = equippedWeapon;
@@ -219,7 +220,7 @@ class MainPanel extends JPanel
 		//TODO add walls to make an actual map
 		//define things to draw
 		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		enemies.add(new Enemy(50,50,1, 100));
+		enemies.add(new Enemy(50,50,1, 100, main));
 
 	}
 	
