@@ -222,7 +222,7 @@ class MainPanel extends JPanel
 		enemies.add(new Enemy(50,50,1, 100));
 
 	}
-
+	
 	//draw stuff
 
 	/**
@@ -299,14 +299,6 @@ class MainPanel extends JPanel
 				Image image = ImageIO.read(new File("gustavo50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH);
 				Enemy temp = enemies.get(i);
 				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
-				//draw health bar
-				g2.setStroke(new BasicStroke(5f * pSize / 50));
-				g.setColor(Color.BLACK);
-				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
-				g.setColor(Color.GREEN);
-				double scale = (temp.getHealth() * 1.0 / temp.getMaxHealth()) - 0.5;
-				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize*scale, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
-
 			} catch (Exception e) {
 			}
 		}
@@ -317,7 +309,7 @@ class MainPanel extends JPanel
 		else if(equippedWeapon.getAmmo() >= equippedWeapon.getMagSize()/4) g.setColor(Color.YELLOW);
 		else g.setColor(Color.RED);
 		g.setFont(new Font("Monospaced", Font.BOLD, 50));
-		g.drawString(String.format("Ammo: %02d", equippedWeapon.getAmmo()), width - 250, height - 30);
+		g.drawString(String.format("%02d", equippedWeapon.getAmmo()), width - 100, height - 50);
 
 	}
 
