@@ -1,3 +1,4 @@
+import java.awt.*;
 
 public class Wall
 {
@@ -32,6 +33,11 @@ public class Wall
 	public int getHeight()
 	{
 		return height;
+	}
+
+	public Rectangle getBounds()
+	{
+		return new Rectangle(x, y, width, height);
 	}
 	//test
 

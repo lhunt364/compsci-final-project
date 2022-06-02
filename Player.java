@@ -6,14 +6,20 @@ public class Player
 	private static int y; //note: this is absolute x and y. the player doesnt move around on screen.
 	private int size;
 	private int dx, dy;
+
+	private int health;
+	private int maxHealth;
 	private Main main;
-	public Player(int x, int y, int size, Main main)
+	public Player(int x, int y, int size, int health, Main main)
 	{
 		this.x = x;
 		this.y = y;
 		this.size = size;
 		this.dx = 0;
 		this.dy = 0;
+
+		this.health = health;
+		this.maxHealth = health;
 		this.main = main;
 	}
 	//TODO make player able to take damage. this can be handled a variety of ways, it just has to work decently efficiently.

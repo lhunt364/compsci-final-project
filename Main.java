@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3], 50, this);
+		player = new Player(temp[2],temp[3], 50, 400, this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -148,6 +148,14 @@ class MainPanel extends JPanel
 	private int pSize;
 	private Main main;
 
+	//enemy creation stuff
+	private double spawnTimer;
+	private double spawnTimeScale;
+	private double speedScale;
+	private double dmgScale;
+	private double healthScale;
+
+
 	//stuff to draw
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Wall> walls = new ArrayList<>();
@@ -168,6 +176,12 @@ class MainPanel extends JPanel
 		this.height = height;
 		this.pSize = pSize;
 		this.main = main;
+
+		spawnTimer = 0;
+		spawnTimeScale = 1;
+		speedScale = 1;
+		dmgScale = 1;
+		healthScale = 1;
 		/*
 		this.walls = new ArrayList<>();
 		this.enemies = new ArrayList<>();
@@ -222,7 +236,7 @@ class MainPanel extends JPanel
 		//TODO add walls to make an actual map
 		//define things to draw
 		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		enemies.add(new Enemy(50,50, pSize,1, 100, main));
+		//enemies.add(new Enemy(50,50, pSize,1, 100,10, main));
 
 	}
 
@@ -352,6 +366,7 @@ class MainPanel extends JPanel
 		{
 			enemies.get(i).update();
 		}
+		spawnEnemy();
 	}
 
 	/**
@@ -369,6 +384,49 @@ class MainPanel extends JPanel
 		walls.add(new Wall(0, mapHeight, mapWidth, mapHeight)); //bottom border
 		System.out.println(walls.size());
 
+	}
+
+	/**
+	 * spawns new enemies of increasing difficulty faster over time. this is called in MainPanel's update()
+	 */
+	public void spawnEnemy()
+	{
+		if(spawnTimer <= 0) //spawn enemy
+		{
+			spawnTimer = 5 * spawnTimeScale; //reset timer
+			spawnTimeScale -= 0.01;
+			Rectangle visibleArea = new Rectangle(player.getX() - width/2 - pSize, player.getY() - height/2 - pSize, width, height); //the area visible to the player
+			//Rectangle spawnArea = new Rectangle((int)(player.getX() - width*1.5 - pSize), (int)(player.getY() - height*1.5 - pSize), width*3, height*3); || !spawnArea.contains(spawn)
+			Point spawn = new Point(0,0);
+			while(visibleArea.contains(spawn) || collidesWithWalls(new Rectangle((int)spawn.getX(), (int)spawn.getY(), pSize, pSize)) ) //do this until spawn location is not visible and valid
+			{
+				int x = (int)(Math.random()*mapWidth);
+				int y = (int)(Math.random()*mapHeight);
+				spawn = new Point(x, y);
+			}
+			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
+			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1*speedScale, (int)(100*healthScale), (int)(10*dmgScale), main));
+			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
+		}
+		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
+		speedScale += 0.0005;
+		dmgScale += 0.001;
+		healthScale += 0.002;
+	}
+
+	/**
+	 * tests whether a rectangle collides with the current walls
+	 * @param r the point to test
+	 * @return true if it does collide, false if not
+	 */
+	public boolean collidesWithWalls(Rectangle r)
+	{
+		boolean ret = true;
+		for(int i = 0; i < walls.size(); i++)
+		{
+			if(walls.get(i).getBounds().intersects(r)) ret = false;
+		}
+		return ret;
 	}
 
 	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
