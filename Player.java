@@ -1,14 +1,17 @@
+import java.awt.*;
 
 public class Player
 {
 	private static int x;
 	private static int y; //note: this is absolute x and y. the player doesnt move around on screen.
+	private int size;
 	private int dx, dy;
 	private Main main;
-	public Player(int x, int y, Main main)
+	public Player(int x, int y, int size, Main main)
 	{
 		this.x = x;
 		this.y = y;
+		this.size = size;
 		this.dx = 0;
 		this.dy = 0;
 		this.main = main;
@@ -44,6 +47,11 @@ public class Player
 		// note: its not static, and making it static would make 4 million other things static, so passing Main to the player is probably easier
 
 		//TODO make player collide with enemies and get hurt by them. Main has a getEnemies() method
+	}
+
+	public Rectangle getBounds()
+	{
+		return new Rectangle(x, y, size, size);
 	}
 
 	//make an update method that moves the player like in the dodgeball project

@@ -37,14 +37,16 @@ public class Main extends JFrame implements ActionListener
 		//set up weapons
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
-		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
+		String[] vectorSounds = {"sounds/vectorfire1.wav", "sounds/vectorfire2.wav", "sounds/vectorfire3.wav", "sounds/vectorfire4.wav", "sounds/vectorfire5.wav"};
+		weapons.add(new Weapon("AKM", 50, 700, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
 		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
-		equippedWeapon = weapons.get(2);
+		weapons.add(new Weapon("KRISS Vector", 10, 2500, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3200, 3000, 0, new Color(96,114,74), 50, 25, this));
+		equippedWeapon = weapons.get(3);
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3], this);
+		player = new Player(temp[2],temp[3], 50, this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -72,7 +74,7 @@ public class Main extends JFrame implements ActionListener
 				if(key == 'a') player.setDx(-3);
 				if(key == 'd') player.setDx(3);
 				if(key == 'r') equippedWeapon.reload(false);
-				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this probably isnt permanent, but is good for testing.
+				if(key == '1' || key == '2' || key == '3' || key == '4') //change guns with number keys. this probably isnt permanent, but is good for testing.
 				{
 					equippedWeapon = weapons.get(Integer.parseInt(key+"") - 1);
 					p.setEquippedWeapon(equippedWeapon);
@@ -165,6 +167,7 @@ class MainPanel extends JPanel
 		this.width = width;
 		this.height = height;
 		this.pSize = pSize;
+		this.main = main;
 		/*
 		this.walls = new ArrayList<>();
 		this.enemies = new ArrayList<>();
@@ -173,7 +176,6 @@ class MainPanel extends JPanel
 		this.mapWidth = 100;
 		this.mapHeight = 100;
 		loadMap(map);
-
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
 		mouseX = 0;
 		mouseY = 0;
@@ -220,7 +222,7 @@ class MainPanel extends JPanel
 		//TODO add walls to make an actual map
 		//define things to draw
 		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		enemies.add(new Enemy(50,50,1, 100, main));
+		enemies.add(new Enemy(50,50, pSize,1, 100, main));
 
 	}
 
@@ -333,7 +335,7 @@ class MainPanel extends JPanel
 			if (equippedWeapon.fire())
 			{
 				double gunDistance = 20.0 * pSize/50;
-				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle));
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle, 15));
 			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
