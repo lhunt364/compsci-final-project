@@ -38,10 +38,10 @@ public class Main extends JFrame implements ActionListener
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
 		String[] vectorSounds = {"sounds/vectorfire1.wav", "sounds/vectorfire2.wav", "sounds/vectorfire3.wav", "sounds/vectorfire4.wav", "sounds/vectorfire5.wav"};
-		weapons.add(new Weapon("AKM", 50, 700, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
+		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 150, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
-		weapons.add(new Weapon("KRISS Vector", 10, 2500, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3200, 3000, 0, new Color(96,114,74), 50, 25, this));
+		weapons.add(new Weapon("KRISS Vector", 15, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3200, 3000, 0, new Color(96,114,74), 50, 25, this));
 		equippedWeapon = weapons.get(3);
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
@@ -248,6 +248,7 @@ class MainPanel extends JPanel
 			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
 			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
 		} catch (Exception e) {
+			System.out.println("failed to draw player");
 		}
 
 		//draw gun
@@ -311,6 +312,7 @@ class MainPanel extends JPanel
 				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize*scale, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
 
 			} catch (Exception e) {
+				System.out.println("failed to draw enemy #" + i);
 			}
 		}
 
@@ -329,7 +331,7 @@ class MainPanel extends JPanel
 	 */
 	public void update()
 	{
-		shootTimer -= 0.02;
+		shootTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
 		if (shootTimer <= 0 && mouseDown && !equippedWeapon.getReloading() &&((equippedWeapon.getFireMode() == 1 && !triggerDown) || equippedWeapon.getFireMode() == 0)) //if can shoot
 		{
 			if (equippedWeapon.fire())
