@@ -1,10 +1,13 @@
+import java.awt.*;
 
 public class Enemy
 {
 	private double x;
 	private double y;
+	private int size;
 
 	private double speed;
+	private int damage;
 
 	private int maxHealth;
 	private int health;
@@ -12,13 +15,15 @@ public class Enemy
 	private Main main;
 
 	//TODO give enemies health so that they can die, as well making some way for an enemy to remove itself from the enemies ArrayList in Main when it dies.
-	public Enemy(int x, int y, double speed, int maxHealth, Main main)
+	public Enemy(int x, int y, int size, double speed, int maxHealth, int damage, Main main)
 	{
 		this.x = x;
 		this.y = y;
+		this.size = size;
 		this.speed = speed;
 		this.maxHealth = maxHealth;
 		this.health = maxHealth;
+		this.damage = damage;
 		this.main = main;
 	}
 
@@ -57,7 +62,14 @@ public class Enemy
 
 		x += speed * Math.cos(angle);
 		y += speed * Math.sin(angle);
+	}
+
+	public Rectangle getBounds()
+	{
+		return new Rectangle((int)x, (int)y, size, size);
+	}
+
+
 }
 
 
-	}

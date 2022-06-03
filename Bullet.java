@@ -13,17 +13,19 @@ public class Bullet extends JComponent
     private Ellipse2D.Double b;
     private int dx;
     private int dy;
+    private int size;
 
     private int speed;
     private double angle;
-    public Bullet(int x,int y, int speed, double angle)
+    public Bullet(int x,int y, int speed, double angle, int size)
     {
         this.speed = speed;
         this.angle = angle;
         this.setLocation(x,y);
+        this.size = size;
         dx = (int)(Math.cos(angle) * speed);
         dy = (int)(Math.sin(angle) * speed);
-        this.setSize(15,15);
+        this.setSize(size,size);
 
         b = new Ellipse2D.Double(0,0,14,14);
 
@@ -59,6 +61,7 @@ public class Bullet extends JComponent
     {
         this.setLocation(this.getX()+dx,this.getY()+dy);
     }
+
 }
 
 
