@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3], 50, 400, this);
+		player = new Player(temp[2],temp[3], 50, 400, 3, this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -69,10 +69,10 @@ public class Main extends JFrame implements ActionListener
 			{
 				System.out.println("pressed: " + e.getKeyChar());
 				char key = e.getKeyChar();
-				if(key == 'w') player.setDy(-3);
-				if(key == 's') player.setDy(3);
-				if(key == 'a') player.setDx(-3);
-				if(key == 'd') player.setDx(3);
+				if(key == 'w') player.setDy(-1*player.getSpeed());
+				if(key == 's') player.setDy(player.getSpeed());
+				if(key == 'a') player.setDx(-1*player.getSpeed());
+				if(key == 'd') player.setDx(player.getSpeed());
 				if(key == 'r') equippedWeapon.reload(false);
 				if(key == '1' || key == '2' || key == '3' || key == '4') //change guns with number keys. this probably isnt permanent, but is good for testing.
 				{
@@ -406,17 +406,18 @@ class MainPanel extends JPanel
 			}
 			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
 			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1*speedScale, (int)(100*healthScale), (int)(10*dmgScale), main));
+			speedScale += 0.03;
+			dmgScale += 0.05;
+			healthScale += 0.07;
 			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
+			if(speedScale > player.getSpeed()*0.75) speedScale = player.getSpeed()*0.75;
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
-		speedScale += 0.0005;
-		dmgScale += 0.001;
-		healthScale += 0.002;
 	}
 
 	/**
 	 * tests whether a rectangle collides with the current walls
-	 * @param r the point to test
+	 * @param r the rectangle to test
 	 * @return true if it does collide, false if not
 	 */
 	public boolean collidesWithWalls(Rectangle r)
