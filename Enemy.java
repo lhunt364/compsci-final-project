@@ -41,6 +41,10 @@ public class Enemy
 
 	public int getMaxHealth() {return maxHealth;}
 
+	public double getSpeed() {return speed;}
+
+	public int getDamage() {return damage;}
+
 	public void setX(double x) {
 		this.x = x;
 	}

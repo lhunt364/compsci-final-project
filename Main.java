@@ -324,7 +324,14 @@ class MainPanel extends JPanel
 				g.setColor(Color.GREEN);
 				double scale = (temp.getHealth() * 1.0 / temp.getMaxHealth()) - 0.5;
 				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize*scale, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
-
+				//draw enemy info
+				g.setFont(new Font("Monospaced", Font.BOLD, 10));
+				g.setColor(Color.GREEN);
+				g.drawString(String.format("%03d", temp.getHealth()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) - 13, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.setColor(Color.BLUE);
+				g.drawString(String.format("%03.1f", temp.getSpeed()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 17, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.setColor(Color.RED);
+				g.drawString(String.format("%03d", temp.getDamage()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 47, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
 			} catch (Exception e) {
 				System.out.println("failed to draw enemy #" + i);
 			}
