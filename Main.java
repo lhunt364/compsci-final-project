@@ -121,6 +121,16 @@ public class Main extends JFrame implements ActionListener
 		p.repaint();
 	}
 
+	/**
+	 * tests whether a rectangle collides with the current walls
+	 * @param r the rectangle to test
+	 * @return true if it does collide, false if not
+	 */
+	public boolean collidesWithWalls(Rectangle r)
+	{
+		return p.collidesWithWalls(r);
+	}
+
 	//drawing data getters
 
 	/**@return ArrayList of all Enemies*/
