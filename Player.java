@@ -9,8 +9,9 @@ public class Player
 
 	private int health;
 	private int maxHealth;
+	private int speed;
 	private Main main;
-	public Player(int x, int y, int size, int health, Main main)
+	public Player(int x, int y, int size, int health, int speed, Main main)
 	{
 		this.x = x;
 		this.y = y;
@@ -20,6 +21,7 @@ public class Player
 
 		this.health = health;
 		this.maxHealth = health;
+		this.speed = speed;
 		this.main = main;
 	}
 	//TODO make player able to take damage. this can be handled a variety of ways, it just has to work decently efficiently.
@@ -43,6 +45,8 @@ public class Player
 	public static int getX() {return x;}
 
 	public static int getY() {return y;}
+
+	public int getSpeed() {return speed;}
 
 	//make move methods
 	public void update()
