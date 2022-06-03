@@ -29,6 +29,7 @@ public class Bullet extends JComponent
 
         b = new Ellipse2D.Double(0,0,14,14);
 
+
     }
     public void paintComponent(Graphics g)
     {

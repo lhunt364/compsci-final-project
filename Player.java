@@ -53,12 +53,15 @@ public class Player
 		// note: its not static, and making it static would make 4 million other things static, so passing Main to the player is probably easier
 
 		//TODO make player collide with enemies and get hurt by them. Main has a getEnemies() method
+
+
 	}
 
 	public Rectangle getBounds()
 	{
 		return new Rectangle(x, y, size, size);
 	}
+
 
 	//make an update method that moves the player like in the dodgeball project
 

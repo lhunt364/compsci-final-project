@@ -37,16 +37,14 @@ public class Main extends JFrame implements ActionListener
 		//set up weapons
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
-		String[] vectorSounds = {"sounds/vectorfire1.wav", "sounds/vectorfire2.wav", "sounds/vectorfire3.wav", "sounds/vectorfire4.wav", "sounds/vectorfire5.wav"};
 		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 150, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 100, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
 		weapons.add(new Weapon("HK G28", 75, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
-		weapons.add(new Weapon("KRISS Vector", 15, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3200, 3000, 0, new Color(96,114,74), 50, 25, this));
-		equippedWeapon = weapons.get(3);
+		equippedWeapon = weapons.get(2);
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3], 50, 400, this);
+		player = new Player(temp[2],temp[3], this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
@@ -74,7 +72,7 @@ public class Main extends JFrame implements ActionListener
 				if(key == 'a') player.setDx(-3);
 				if(key == 'd') player.setDx(3);
 				if(key == 'r') equippedWeapon.reload(false);
-				if(key == '1' || key == '2' || key == '3' || key == '4') //change guns with number keys. this probably isnt permanent, but is good for testing.
+				if(key == '1' || key == '2' || key == '3') //change guns with 1 2 and 3. this probably isnt permanent, but is good for testing.
 				{
 					equippedWeapon = weapons.get(Integer.parseInt(key+"") - 1);
 					p.setEquippedWeapon(equippedWeapon);
@@ -148,14 +146,6 @@ class MainPanel extends JPanel
 	private int pSize;
 	private Main main;
 
-	//enemy creation stuff
-	private double spawnTimer;
-	private double spawnTimeScale;
-	private double speedScale;
-	private double dmgScale;
-	private double healthScale;
-
-
 	//stuff to draw
 	private ArrayList<Enemy> enemies = new ArrayList<>();
 	private ArrayList<Wall> walls = new ArrayList<>();
@@ -175,13 +165,6 @@ class MainPanel extends JPanel
 		this.width = width;
 		this.height = height;
 		this.pSize = pSize;
-		this.main = main;
-
-		spawnTimer = 0;
-		spawnTimeScale = 1;
-		speedScale = 1;
-		dmgScale = 1;
-		healthScale = 1;
 		/*
 		this.walls = new ArrayList<>();
 		this.enemies = new ArrayList<>();
@@ -190,6 +173,7 @@ class MainPanel extends JPanel
 		this.mapWidth = 100;
 		this.mapHeight = 100;
 		loadMap(map);
+
 		//handle mouse stuff (the mouselistener needs to be here so that the mouseevents are relative to the panel and not to the frame
 		mouseX = 0;
 		mouseY = 0;
@@ -236,13 +220,12 @@ class MainPanel extends JPanel
 		//TODO add walls to make an actual map
 		//define things to draw
 		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		//enemies.add(new Enemy(50,50, pSize,1, 100,10, main));
+		enemies.add(new Enemy(50,50,1, 100.0, main));
 
 	}
 	
 	//draw stuff
-
-	/**
+		/**
 	 Paints pretty much everything i think
 	 */
 	protected void paintComponent(Graphics g) {
@@ -262,7 +245,6 @@ class MainPanel extends JPanel
 			//Image image = ImageIO.read(new File("hannkschrader50x50.png"));
 			g.drawImage(image, (width - pSize) / 2, (height - pSize) / 2, null);
 		} catch (Exception e) {
-			System.out.println("failed to draw player");
 		}
 
 		//draw gun
@@ -318,7 +300,6 @@ class MainPanel extends JPanel
 				Enemy temp = enemies.get(i);
 				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
 			} catch (Exception e) {
-				System.out.println("failed to draw enemy #" + i);
 			}
 		}
 
@@ -337,13 +318,13 @@ class MainPanel extends JPanel
 	 */
 	public void update()
 	{
-		shootTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
+		shootTimer -= 0.02;
 		if (shootTimer <= 0 && mouseDown && !equippedWeapon.getReloading() &&((equippedWeapon.getFireMode() == 1 && !triggerDown) || equippedWeapon.getFireMode() == 0)) //if can shoot
 		{
 			if (equippedWeapon.fire())
 			{
 				double gunDistance = 20.0 * pSize/50;
-				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle, 15));
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle));
 			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
@@ -358,7 +339,6 @@ class MainPanel extends JPanel
 		{
 			enemies.get(i).update();
 		}
-		spawnEnemy();
 	}
 
 	/**
@@ -376,49 +356,6 @@ class MainPanel extends JPanel
 		walls.add(new Wall(0, mapHeight, mapWidth, mapHeight)); //bottom border
 		System.out.println(walls.size());
 
-	}
-
-	/**
-	 * spawns new enemies of increasing difficulty faster over time. this is called in MainPanel's update()
-	 */
-	public void spawnEnemy()
-	{
-		if(spawnTimer <= 0) //spawn enemy
-		{
-			spawnTimer = 5 * spawnTimeScale; //reset timer
-			spawnTimeScale -= 0.01;
-			Rectangle visibleArea = new Rectangle(player.getX() - width/2 - pSize, player.getY() - height/2 - pSize, width, height); //the area visible to the player
-			//Rectangle spawnArea = new Rectangle((int)(player.getX() - width*1.5 - pSize), (int)(player.getY() - height*1.5 - pSize), width*3, height*3); || !spawnArea.contains(spawn)
-			Point spawn = new Point(0,0);
-			while(visibleArea.contains(spawn) || collidesWithWalls(new Rectangle((int)spawn.getX(), (int)spawn.getY(), pSize, pSize)) ) //do this until spawn location is not visible and valid
-			{
-				int x = (int)(Math.random()*mapWidth);
-				int y = (int)(Math.random()*mapHeight);
-				spawn = new Point(x, y);
-			}
-			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
-			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1*speedScale, (int)(100*healthScale), (int)(10*dmgScale), main));
-			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
-		}
-		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
-		speedScale += 0.0005;
-		dmgScale += 0.001;
-		healthScale += 0.002;
-	}
-
-	/**
-	 * tests whether a rectangle collides with the current walls
-	 * @param r the point to test
-	 * @return true if it does collide, false if not
-	 */
-	public boolean collidesWithWalls(Rectangle r)
-	{
-		boolean ret = true;
-		for(int i = 0; i < walls.size(); i++)
-		{
-			if(walls.get(i).getBounds().intersects(r)) ret = false;
-		}
-		return ret;
 	}
 
 	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
