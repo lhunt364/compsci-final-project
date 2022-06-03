@@ -220,12 +220,13 @@ class MainPanel extends JPanel
 		//TODO add walls to make an actual map
 		//define things to draw
 		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		enemies.add(new Enemy(50,50,1, 100.0, main));
+		enemies.add(new Enemy(50,50,1, 100.0, 1000, 50, main));
 
 	}
 	
 	//draw stuff
-		/**
+
+	/**
 	 Paints pretty much everything i think
 	 */
 	protected void paintComponent(Graphics g) {
