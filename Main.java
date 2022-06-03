@@ -423,9 +423,9 @@ class MainPanel extends JPanel
 			}
 			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
 			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1*speedScale, (int)(100*healthScale), (int)(10*dmgScale), main));
-			speedScale += 0.03;
-			dmgScale += 0.05;
-			healthScale += 0.07;
+			speedScale += 0.05;
+			dmgScale += 0.06;
+			healthScale += 0.08;
 			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
 			if(speedScale > player.getSpeed()*0.75) speedScale = player.getSpeed()*0.75;
 		}
