@@ -67,6 +67,7 @@ public class Main extends JFrame implements ActionListener
 			@Override
 			public void keyPressed(KeyEvent e) 
 			{
+
 				System.out.println("pressed: " + e.getKeyChar());
 				char key = e.getKeyChar();
 				if(key == 'w') player.setDy(-1*player.getSpeed());
@@ -374,6 +375,8 @@ class MainPanel extends JPanel
 			enemies.get(i).update();
 		}
 		spawnEnemy();
+
+
 	}
 
 	/**
@@ -396,6 +399,13 @@ class MainPanel extends JPanel
 	/**
 	 * spawns new enemies of increasing difficulty faster over time. this is called in MainPanel's update()
 	 */
+
+
+	public void playerWallCollision(){
+
+	}
+
+
 	public void spawnEnemy()
 	{
 		if(spawnTimer <= 0) //spawn enemy
@@ -420,6 +430,11 @@ class MainPanel extends JPanel
 			if(speedScale > player.getSpeed()*0.75) speedScale = player.getSpeed()*0.75;
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
+
+
+
+
+
 	}
 
 	/**

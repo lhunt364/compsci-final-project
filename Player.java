@@ -41,7 +41,7 @@ public class Player
 	public void setDy(int dy) {
 		this.dy = dy;
 	}
-
+	public int getHealth(){return health;}
 	public static int getX() {return x;}
 
 	public static int getY() {return y;}
@@ -51,6 +51,10 @@ public class Player
 	//make move methods
 	public void update()
 	{
+		while(this.getHealth()>0){
+			
+		}
+
 		x+=dx;
 		y+=dy;
 		//TODO make player collide with walls. theres a method in Main called getWalls() which could be helpful.
