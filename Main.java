@@ -437,7 +437,7 @@ class MainPanel extends JPanel
 	 */
 	public void spawnEnemy()
 	{
-		if(spawnTimer <= 0) //spawn enemy
+		if(spawnTimer <= 0 && enemies.size() < 10) //spawn enemy
 		{
 			spawnTimer = 5 * spawnTimeScale; //reset timer
 			spawnTimeScale -= 0.01;
