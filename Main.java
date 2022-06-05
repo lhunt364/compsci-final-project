@@ -331,9 +331,9 @@ class MainPanel extends JPanel
 				Image image = ImageIO.read(new File("gustavo50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH);
 				Enemy temp = enemies.get(i);
 				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
-				//draw health bar
+				//draw health bar //TODO there's a limitation with Line2D that makes the health bar not accurate at low health amounts. doesn't matter that much but should be changed to using Rectangles
 				g2.setStroke(new BasicStroke(5f * pSize / 50));
-				g.setColor(Color.BLACK);
+				g.setColor(Color.RED);
 				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
 				g.setColor(Color.GREEN);
 				double scale = (temp.getHealth() * 1.0 / temp.getMaxHealth()) - 0.5;
@@ -345,7 +345,7 @@ class MainPanel extends JPanel
 				g.setColor(Color.BLUE);
 				g.drawString(String.format("%03.1f", temp.getSpeed()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 17, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
 				g.setColor(Color.RED);
-				g.drawString(String.format("%03d", temp.getDamage()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 47, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.drawString(String.format("%02d", temp.getDamage()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 47, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
 			} catch (Exception e) {
 				System.out.println("failed to draw enemy #" + i);
 			}
@@ -358,6 +358,20 @@ class MainPanel extends JPanel
 		else g.setColor(Color.RED);
 		g.setFont(new Font("Monospaced", Font.BOLD, 50));
 		g.drawString(String.format("Ammo: %02d", equippedWeapon.getAmmo()), width - 250, height - 30);
+		//draw health bar
+		g.setColor(Color.GREEN);
+		g.setFont(new Font("Monospaced", Font.BOLD, 25));
+		g.drawString("Health: " + player.getHealth(), 25, 30);
+		g.setColor(Color.RED);
+		g.fillRect(20, 40, 200, 20);
+		if(player.getHealth() > 0) //catch for making the health bar go backwards
+		{
+			double scale = (player.getHealth() * 1.0 / player.getMaxHealth());
+			g.setColor(Color.GREEN);
+			g.fillRect(20, 40, (int) (200*scale), 20);
+		}
+
+
 
 	}
 
@@ -418,7 +432,9 @@ class MainPanel extends JPanel
 
 	}
 
-
+	/**
+	 * attempts to spawn an enemy somewhere offscreen and increases the difficulty of the next enemy spawned
+	 */
 	public void spawnEnemy()
 	{
 		if(spawnTimer <= 0) //spawn enemy
@@ -435,19 +451,14 @@ class MainPanel extends JPanel
 				spawn = new Point(x, y);
 			}
 			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
-			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1*speedScale, (int)(100*healthScale), (int)(10*dmgScale), main));
-			speedScale += 0.05;
-			dmgScale += 0.06;
-			healthScale += 0.08;
+			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1.5*speedScale, (int)(100*healthScale), (int)(4*dmgScale), main));
+			speedScale += 0.07;
+			dmgScale += 0.05;
+			healthScale += 0.1;
 			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
-			if(speedScale > player.getSpeed()*0.75) speedScale = player.getSpeed()*0.75;
+			if(speedScale > player.getSpeed()*0.8) speedScale = player.getSpeed()*0.8; //upper limit for speedScale
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
-
-
-
-
-
 	}
 
 	/**

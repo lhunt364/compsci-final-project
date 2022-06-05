@@ -43,6 +43,7 @@ public class Player
 		this.dy = dy;
 	}
 	public static int getHealth(){return health;}
+	public int getMaxHealth() {return maxHealth;}
 	public static int getX() {return x;}
 
 	public static int getY() {return y;}
