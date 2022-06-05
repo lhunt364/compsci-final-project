@@ -46,7 +46,7 @@ public class Main extends JFrame implements ActionListener
 		//set up other important stuff
 		map = "maptest"; //<----------------------- SET MAP HERE <--------------------------
 		int[] temp = MapReadWrite.readBorders(map);
-		player = new Player(temp[2],temp[3], 50, 400, 3, this);
+		player = new Player(temp[2],temp[3], 50, 1000, 3, this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
 		setTitle("joe");
