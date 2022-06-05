@@ -56,6 +56,12 @@ public class Enemy
 	//TODO make this class actually work. basically, make an update method that can move this Enemy towards the player.
 	public void update(){
 
+		if(this.getBounds().intersects(Player.getBounds())){
+			System.out.println("Enemy touched");
+			System.out.println(Player.getHealth());
+			Player.health -= this.getDamage();
+		}
+
 		int playerX = Player.getX();
 		int playerY = Player.getY();
 

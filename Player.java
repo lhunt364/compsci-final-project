@@ -4,10 +4,11 @@ public class Player
 {
 	private static int x;
 	private static int y; //note: this is absolute x and y. the player doesnt move around on screen.
-	private int size;
-	private int dx, dy;
+	private static int size;
+	private static int dx;
+	private static int dy;
 
-	private int health;
+	public static int health;
 	private int maxHealth;
 	private int speed;
 	private Main main;
@@ -26,7 +27,7 @@ public class Player
 	}
 	//TODO make player able to take damage. this can be handled a variety of ways, it just has to work decently efficiently.
 
-	public int getDx() {
+	public static int getDx() {
 		return dx;
 	}
 
@@ -34,14 +35,14 @@ public class Player
 		this.dx = dx;
 	}
 
-	public int getDy() {
+	public static int getDy() {
 		return dy;
 	}
 
 	public void setDy(int dy) {
 		this.dy = dy;
 	}
-	public int getHealth(){return health;}
+	public static int getHealth(){return health;}
 	public static int getX() {return x;}
 
 	public static int getY() {return y;}
@@ -51,9 +52,9 @@ public class Player
 	//make move methods
 	public void update()
 	{
-		while(this.getHealth()>0){
-			
-		}
+		//while(this.getHealth()>0){
+
+		//}
 
 		x+=dx;
 		y+=dy;
@@ -65,7 +66,7 @@ public class Player
 
 	}
 
-	public Rectangle getBounds()
+	public static Rectangle getBounds()
 	{
 		return new Rectangle(x, y, size, size);
 	}

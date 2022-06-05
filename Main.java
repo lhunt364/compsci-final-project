@@ -141,6 +141,9 @@ public class Main extends JFrame implements ActionListener
 	public ArrayList<Wall> getWalls() {return p.getWalls();}
 
 	public double getGunVolume() {return gunVolume;}
+
+
+
 }
 
 //the panel that contains everything being drawn (players, enemies, walls, etc.) and also handles the mouse/shooting
@@ -156,7 +159,7 @@ class MainPanel extends JPanel
 	private boolean triggerDown; //becomes true when a shot is fired. becomes false when mouseDown = false. used to simulate semi auto fire
 	private double shootTimer; //time since last shot in seconds
 	private int width, height;
-	private int pSize;
+	public int pSize;
 	private Main main;
 
 	//enemy creation stuff
