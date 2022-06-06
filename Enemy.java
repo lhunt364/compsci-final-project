@@ -79,6 +79,25 @@ public class Enemy
 			main.addScore(maxHealth);
 			main.getEnemies().remove(this);
 		}
+
+
+
+		//collision with bullets
+		Weapon currentWeapon = main.getEquippedWeapon();
+		int damage = currentWeapon.getDmg();
+		int bulletLen = main.getBullets().size();
+		for(int i = 0; i<bulletLen; i++){
+			if(main.getBullets().size()>0) {
+			if ((main.getBullets().size() > i)) {
+			if(main.getBullets().get(i).getBounds().intersects(this.getBounds())){
+				this.health -= damage;
+						main.getBullets().remove(i);
+						i--;
+					}
+				}
+				}
+		}
+
 	}
 
 	public Rectangle getBounds()

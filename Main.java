@@ -1,13 +1,6 @@
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
 import java.io.File;
-import java.io.IOException;
-import java.sql.Array;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
@@ -190,6 +183,8 @@ public class Main extends JFrame implements ActionListener
 	public double getGunVolume() {return gunVolume;}
 	public void setDifficulty(double d) {p.setDifficulty(d);}
 	public void addScore(int s) {score += s; kills++;}
+
+	public Weapon getEquippedWeapon(){return equippedWeapon;}
 
 
 
@@ -546,8 +541,7 @@ class MainPanel extends JPanel
 	public ArrayList<Wall> getWalls() {return walls;}
 	public void setDifficulty(double d) {difficulty = d;}
 	public int getPSize() {return pSize;}
-	
-	
+
 	
 }
 

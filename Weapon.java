@@ -148,5 +148,7 @@ public class Weapon
 
     public int getAmmo() {return ammo;}
 
+    public int getDmg(){return dmg;}
+
     public int getMagSize() {return magSize;}
 }
