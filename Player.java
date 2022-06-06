@@ -49,7 +49,7 @@ public class Player
 	public static int getY() {return y;}
 
 	public int getSpeed() {return speed;}
-
+	public int getSize(){return size;}
 	//make move methods
 	public void update()
 	{
@@ -57,15 +57,18 @@ public class Player
 
 		//}
 
-		x+=dx;
-		y+=dy;
-		//TODO make player collide with walls. theres a method in Main called getWalls() which could be helpful.
-		// note: its not static, and making it static would make 4 million other things static, so passing Main to the player is probably easier
+			//TODO make player collide with walls. theres a method in Main called getWalls() which could be helpful.
+			// note: its not static, and making it static would make 4 million other things static, so passing Main to the player is probably easier
 
-		//TODO make player collide with enemies and get hurt by them. Main has a getEnemies() method
+			//TODO make player collide with enemies and get hurt by them. Main has a getEnemies() method
 
 
-	}
+			x += dx;
+			y += dy;
+		}
+
+
+
 
 	public static Rectangle getBounds()
 	{

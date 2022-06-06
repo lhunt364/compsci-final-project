@@ -74,13 +74,14 @@ public class Main extends JFrame implements ActionListener
 			@Override
 			public void keyPressed(KeyEvent e) 
 			{
+				char key = e.getKeyChar();
 
 				System.out.println("pressed: " + e.getKeyChar());
-				char key = e.getKeyChar();
-				if(key == 'w') player.setDy(-1*player.getSpeed());
-				if(key == 's') player.setDy(player.getSpeed());
-				if(key == 'a') player.setDx(-1*player.getSpeed());
-				if(key == 'd') player.setDx(player.getSpeed());
+				if (key == 'w') player.setDy(-1 * player.getSpeed());
+				if (key == 's') player.setDy(player.getSpeed());
+				if (key == 'a') player.setDx(-1 * player.getSpeed());
+				if (key == 'd') player.setDx(player.getSpeed());
+
 				if(key == 'r') equippedWeapon.reload(false);
 				if(key == '1' || key == '2' || key == '3' || key == '4') //change guns with number keys. this probably isnt permanent, but is good for testing.
 				{
@@ -185,7 +186,6 @@ public class Main extends JFrame implements ActionListener
 	public void addScore(int s) {score += s; kills++;}
 
 	public Weapon getEquippedWeapon(){return equippedWeapon;}
-
 
 
 }
