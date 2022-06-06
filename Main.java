@@ -24,16 +24,24 @@ public class Main extends JFrame implements ActionListener
 	private Weapon equippedWeapon;
 	private ArrayList<Weapon> weapons;
 
+	private CardLayout cardLayout;
+	private JPanel cardPanel;
 	private MainPanel p;
+	private EndPanel e;
 
 	private double gunVolume; //volume of gun sounds
 
 	private String map; //current map
 
-	//TODO keep track of how many enemies have been killed so that a score can be calculated.
+	private char state; //game state. m = menu, g = game, e = end screen
+	private int score; //score of the current game. is reset when goToEndScreen() is called
+	private int kills; //amount of kills. displays on end screen
+
 	public Main()
 	{
-		
+		state = 'g';
+		score = 0;
+		kills = 0;
 		//set up weapons
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
@@ -52,10 +60,16 @@ public class Main extends JFrame implements ActionListener
 		setTitle("joe");
 		setResizable(false);
 
-		//set up panel
-
+		//set up panels
+		cardLayout = new CardLayout();
+		cardPanel = new JPanel(cardLayout);
 		p = new MainPanel(player, equippedWeapon, 600, 600, 50, map, this); // <<<----- set up panel here. if you want to change player size or window size do it here. pSize is player size.
-		add(p);
+		cardPanel.add(p, "game");
+		e = new EndPanel(600, 600, this);
+		cardPanel.add(e, "end");
+		add(cardPanel);
+		cardLayout.show(cardPanel, "game");
+
 		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
 
 		//add key listener
@@ -116,9 +130,16 @@ public class Main extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) //updates every frame (50fps)
 	{
-		player.update();
-		p.update();
-		p.repaint();
+		if(state == 'g') //if playing the game
+		{
+			player.update();
+			p.update();
+			p.repaint();
+		}
+		if(player.getHealth() <= 0) //if player is dead
+		{
+			goToEndScreen();
+		}
 	}
 
 	/**
@@ -131,6 +152,32 @@ public class Main extends JFrame implements ActionListener
 		return p.collidesWithWalls(r);
 	}
 
+	/**
+	 * ends the game, putting the player on the end screen
+	 */
+	public void goToEndScreen()
+	{
+		state = 'e';
+		e.updateInfo(score, kills);
+		cardLayout.show(cardPanel, "end");
+	}
+
+	public void goToMenu()
+	{
+		state = 'm';
+
+	}
+
+	public void goToGame()
+	{
+		state = 'g';
+		int[] temp = MapReadWrite.readBorders(map);
+		player = new Player(temp[2],temp[3], 50, 1000, 3, this);
+		p.reset();
+		p.loadMap(map);
+		cardLayout.show(cardPanel, "game");
+	}
+
 	//drawing data getters
 
 	/**@return ArrayList of all Enemies*/
@@ -141,6 +188,8 @@ public class Main extends JFrame implements ActionListener
 	public ArrayList<Wall> getWalls() {return p.getWalls();}
 
 	public double getGunVolume() {return gunVolume;}
+	public void setDifficulty(double d) {p.setDifficulty(d);}
+	public void addScore(int s) {score += s; kills++;}
 
 
 
@@ -168,6 +217,7 @@ class MainPanel extends JPanel
 	private double speedScale;
 	private double dmgScale;
 	private double healthScale;
+	private double difficulty;
 
 
 	//stuff to draw
@@ -196,6 +246,7 @@ class MainPanel extends JPanel
 		speedScale = 1;
 		dmgScale = 1;
 		healthScale = 1;
+		difficulty = 1;
 		/*
 		this.walls = new ArrayList<>();
 		this.enemies = new ArrayList<>();
@@ -424,8 +475,19 @@ class MainPanel extends JPanel
 	}
 
 	/**
-	 * spawns new enemies of increasing difficulty faster over time. this is called in MainPanel's update()
+	 * simply resets the ArrayLists storing things to render, as well as some fields
 	 */
+	public void reset()
+	{
+		walls = new ArrayList<>();
+		enemies = new ArrayList<>();
+		bullets = new ArrayList<>();
+		spawnTimer = 0;
+		spawnTimeScale = 1;
+		speedScale = 1;
+		dmgScale = 1;
+		healthScale = 1;
+	}
 
 
 	public void playerWallCollision(){
@@ -452,11 +514,11 @@ class MainPanel extends JPanel
 			}
 			System.out.println("spawned new enemy at " + spawn.getX() + ", " + spawn.getY());
 			enemies.add(new Enemy((int)spawn.getX(), (int)spawn.getY(), pSize, 1.5*speedScale, (int)(100*healthScale), (int)(4*dmgScale), main));
-			speedScale += 0.07;
-			dmgScale += 0.05;
-			healthScale += 0.1;
+			speedScale += 0.12*difficulty;
+			dmgScale += 0.75*difficulty;
+			healthScale += 0.14*difficulty;
 			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
-			if(speedScale > player.getSpeed()*0.8) speedScale = player.getSpeed()*0.8; //upper limit for speedScale
+			if(speedScale > player.getSpeed()*1.2) speedScale = player.getSpeed()*1.2; //upper limit for speedScale
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
 	}
@@ -478,10 +540,11 @@ class MainPanel extends JPanel
 
 	public void setEquippedWeapon(Weapon w) {equippedWeapon = w;}
 
-	//panel getters
+	//panel getters/setters
 	public ArrayList<Enemy> getEnemies() {return enemies;}
 	public ArrayList<Bullet> getBullets() {return bullets;}
 	public ArrayList<Wall> getWalls() {return walls;}
+	public void setDifficulty(double d) {difficulty = d;}
 	public int getPSize() {return pSize;}
 	
 	

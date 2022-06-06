@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Enemy
 {
@@ -72,6 +73,12 @@ public class Enemy
 
 		x += speed * Math.cos(angle);
 		y += speed * Math.sin(angle);
+
+		if(health <= 0) //makes enemy die and adds score to Main. not sure if this works because as of writing collision doesnt work
+		{
+			main.addScore(maxHealth);
+			main.getEnemies().remove(this);
+		}
 	}
 
 	public Rectangle getBounds()
