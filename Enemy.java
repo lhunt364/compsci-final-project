@@ -105,15 +105,20 @@ public class Enemy
 			Wall temp2 = temp.get(i);
 			if(this.getBounds().intersects(temp2.getBounds()))
 			{
-				if ((y+size/2 >= temp2.getY() || y-size/2 <= temp2.getY()+temp2.getHeight()))
+				boolean yCol = false;
+				y -= speed * Math.sin(angle);
+				if (!this.getBounds().intersects(temp2.getBounds()))
 				{
 					y -= speed * Math.sin(angle);
+					yCol = true;
 				}
-
-				if((x+size/2 >= temp2.getX() || x-size/2 <= temp2.getX()+temp2.getWidth())) //&& y - (temp2.getY()+temp2.getHeight()/2) >= x - (temp2.getX()+temp2.getWidth()/2)
+				y += speed * Math.sin(angle);
+				x -= speed * Math.cos(angle);
+				if(!this.getBounds().intersects(temp2.getBounds()) && !yCol)
 				{
 					x -= speed * Math.cos(angle);
 				}
+				x += speed * Math.cos(angle);
 
 			}
 

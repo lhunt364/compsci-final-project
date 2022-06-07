@@ -39,10 +39,10 @@ public class Main extends JFrame implements ActionListener
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
 		String[] vectorSounds = {"sounds/vectorfire1.wav", "sounds/vectorfire2.wav", "sounds/vectorfire3.wav", "sounds/vectorfire4.wav", "sounds/vectorfire5.wav"};
-		weapons.add(new Weapon("AKM", 50, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 40, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 400, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 65, this));
-		weapons.add(new Weapon("HK G28", 100, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3500, 3000, 1, new Color(225,208,126), 20, 55, this));
-		weapons.add(new Weapon("KRISS Vector", 20, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3200, 3000, 0, new Color(96,114,74), 50, 25, this));
+		weapons.add(new Weapon("AKM", 75, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 35, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 400, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 55, this));
+		weapons.add(new Weapon("HK G28", 150, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3100, 3250, 1, new Color(225,208,126), 20, 45, this));
+		weapons.add(new Weapon("KRISS Vector", 35, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3100, 3150, 0, new Color(96,114,74), 50, 25, this));
 		weapons.add(new Weapon("KRISS Vector but better", 100, 4000, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 1, 1, 0, Color.PINK, 98, 25, this));
 		equippedWeapon = weapons.get(3);
 		//set up other important stuff
@@ -378,21 +378,31 @@ class MainPanel extends JPanel
 				Image image = ImageIO.read(new File("gustavo50x50.png")).getScaledInstance(pSize, pSize, Image.SCALE_SMOOTH);
 				Enemy temp = enemies.get(i);
 				g.drawImage(image, (int) (temp.getX() - player.getX() + (width / 2)) - pSize/2, (int) (temp.getY() - player.getY() + (height / 2)) - pSize/2, null);
-				//draw health bar //TODO there's a limitation with Line2D that makes the health bar not accurate at low health amounts. doesn't matter that much but should be changed to using Rectangles
-				g2.setStroke(new BasicStroke(5f * pSize / 50));
+				//draw health bar OLD HEALTH BAR
+				/*g2.setStroke(new BasicStroke(5f * pSize / 50));
 				g.setColor(Color.RED);
 				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
 				g.setColor(Color.GREEN);
 				double scale = (temp.getHealth() * 1.0 / temp.getMaxHealth()) - 0.5;
 				g2.draw(new Line2D.Double((temp.getX() - player.getX() + (width / 2)) - pSize/2, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10, (temp.getX() - player.getX() + (width / 2)) + pSize*scale, (temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10));
+				 */
+				//draw health bar
+				g.setColor(Color.RED);
+				g.fillRect((int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2), (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10), pSize, 3);
+				if(temp.getHealth() > 0) //catch for making the health bar go backwards
+				{
+					double scale = (temp.getHealth() * 1.0 / temp.getMaxHealth());
+					g.setColor(Color.GREEN);
+					g.fillRect((int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2), (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 10), (int) (pSize*scale), 3);
+				}
 				//draw enemy info
 				g.setFont(new Font("Monospaced", Font.BOLD, 10));
 				g.setColor(Color.GREEN);
-				g.drawString(String.format("%03d", temp.getHealth()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) - 13, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.drawString(String.format("%03d", temp.getHealth()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) - 13, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 15));
 				g.setColor(Color.BLUE);
-				g.drawString(String.format("%03.1f", temp.getSpeed()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 17, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.drawString(String.format("%03.1f", temp.getSpeed()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 17, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 15));
 				g.setColor(Color.RED);
-				g.drawString(String.format("%02d", temp.getDamage()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 47, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 22));
+				g.drawString(String.format("%02d", temp.getDamage()), (int) ((temp.getX() - player.getX() + (width / 2)) - pSize/2) + 47, (int) ((temp.getY() - player.getY() + (height / 2)) - pSize/2 - 15));
 			} catch (Exception e) {
 				System.out.println("failed to draw enemy #" + i);
 			}
@@ -495,10 +505,10 @@ class MainPanel extends JPanel
 	 */
 	public void spawnEnemy()
 	{
-		if(spawnTimer <= 0 && enemies.size() < 10) //spawn enemy
+		if(spawnTimer <= 0 && enemies.size() < 7) //spawn enemy
 		{
 			spawnTimer = 2 * spawnTimeScale; //reset timer
-			spawnTimeScale -= 0.01;
+			spawnTimeScale -= 0.013;
 			Rectangle visibleArea = new Rectangle(player.getX() - width/2, player.getY() - height/2, width, height); //the area visible to the player
 			//Rectangle spawnArea = new Rectangle((int)(player.getX() - width*1.5 - pSize), (int)(player.getY() - height*1.5 - pSize), width*3, height*3); || !spawnArea.contains(spawn)
 			Point spawn = new Point((int)(Math.random()*mapWidth),(int)(Math.random()*mapHeight));
@@ -514,7 +524,7 @@ class MainPanel extends JPanel
 			speedScale += 0.06*difficulty;
 			dmgScale += 0.05*difficulty;
 			healthScale += 0.08*difficulty;
-			if(spawnTimeScale < 0.05) spawnTimeScale = 0.05; //lower limit for spawnTimeScale
+			if(spawnTimeScale < 0.25) spawnTimeScale = 0.25; //lower limit for spawnTimeScale
 			if(speedScale > player.getSpeed()*0.85) speedScale = player.getSpeed()*0.85; //upper limit for speedScale
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)

@@ -69,21 +69,27 @@ public class Player
 		x += dx;
 		y += dy;
 
+		//this took way too much work to get working :C but at least its finally working C:
 		ArrayList<Wall> temp = main.getWalls();
 		for(int i = 0; i < temp.size(); i++)
 		{
 			Wall temp2 = temp.get(i);
 			if(this.getBounds().intersects(temp2.getBounds()))
 			{
-				if ((y+size/2 >= temp2.getY() || y-size/2 <= temp2.getY()+temp2.getHeight()))
+				boolean yCol = false;
+				y -= dy;
+				if (!this.getBounds().intersects(temp2.getBounds()))
 				{
 					y -= dy;
+					yCol = true;
 				}
-
-				if((x+size/2 >= temp2.getX() || x-size/2 <= temp2.getX()+temp2.getWidth())) //&& y - (temp2.getY()+temp2.getHeight()/2) >= x - (temp2.getX()+temp2.getWidth()/2)
+				y += dy;
+				x -= dx;
+				if(!this.getBounds().intersects(temp2.getBounds()) && !yCol)
 				{
 					x -= dx;
 				}
+				x += dx;
 
 			}
 
