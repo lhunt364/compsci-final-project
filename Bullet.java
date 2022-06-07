@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 public class Bullet extends JComponent
 {
@@ -17,7 +19,8 @@ public class Bullet extends JComponent
 
     private int speed;
     private double angle;
-    public Bullet(int x,int y, int speed, double angle, int size)
+    private Main main;
+    public Bullet(int x,int y, int speed, double angle, int size, Main main)
     {
         this.speed = speed;
         this.angle = angle;
@@ -26,6 +29,7 @@ public class Bullet extends JComponent
         dx = (int)(Math.cos(angle) * speed);
         dy = (int)(Math.sin(angle) * speed);
         this.setSize(size,size);
+        this.main = main;
 
         b = new Ellipse2D.Double(0,0,14,14);
 
@@ -60,7 +64,17 @@ public class Bullet extends JComponent
 
     public void update()
     {
+
         this.setLocation(this.getX()+dx,this.getY()+dy);
+        ArrayList<Wall> temp = main.getWalls();
+        for(int i = 0; i < temp.size(); i++)
+        {
+            Wall temp2 = temp.get(i);
+            if(this.getBounds().intersects(temp2.getBounds()))
+            {
+                main.getBullets().remove(this);
+            }
+        }
     }
 
 }

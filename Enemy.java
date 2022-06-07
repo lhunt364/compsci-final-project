@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.util.ArrayList;
 
 public class Enemy
@@ -74,7 +75,7 @@ public class Enemy
 		x += speed * Math.cos(angle);
 		y += speed * Math.sin(angle);
 
-		if(health <= 0) //makes enemy die and adds score to Main. not sure if this works because as of writing collision doesnt work
+		if(health <= 0)
 		{
 			main.addScore(maxHealth);
 			main.getEnemies().remove(this);
@@ -97,12 +98,32 @@ public class Enemy
 				}
 				}
 		}
+		//collision with walls
+		ArrayList<Wall> temp = main.getWalls();
+		for(int i = 0; i < temp.size(); i++)
+		{
+			Wall temp2 = temp.get(i);
+			if(this.getBounds().intersects(temp2.getBounds()))
+			{
+				if ((y+size/2 >= temp2.getY() || y-size/2 <= temp2.getY()+temp2.getHeight()))
+				{
+					y -= speed * Math.sin(angle);
+				}
+
+				if((x+size/2 >= temp2.getX() || x-size/2 <= temp2.getX()+temp2.getWidth())) //&& y - (temp2.getY()+temp2.getHeight()/2) >= x - (temp2.getX()+temp2.getWidth()/2)
+				{
+					x -= speed * Math.cos(angle);
+				}
+
+			}
+
+		}
 
 	}
 
 	public Rectangle getBounds()
 	{
-		return new Rectangle((int)x, (int)y, size, size);
+		return new Rectangle((int)x-size/2, (int)y-size/2, size, size);
 	}
 
 
