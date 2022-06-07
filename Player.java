@@ -1,4 +1,6 @@
 import java.awt.*;
+import java.awt.geom.Line2D;
+import java.util.ArrayList;
 
 public class Player
 {
@@ -12,6 +14,7 @@ public class Player
 	private int maxHealth;
 	private int speed;
 	private Main main;
+
 	public Player(int x, int y, int size, int health, int speed, Main main)
 	{
 		this.x = x;
@@ -63,16 +66,37 @@ public class Player
 			//TODO make player collide with enemies and get hurt by them. Main has a getEnemies() method
 
 
-			x += dx;
-			y += dy;
+		x += dx;
+		y += dy;
+
+		ArrayList<Wall> temp = main.getWalls();
+		for(int i = 0; i < temp.size(); i++)
+		{
+			Wall temp2 = temp.get(i);
+			if(this.getBounds().intersects(temp2.getBounds()))
+			{
+				if ((y+size/2 >= temp2.getY() || y-size/2 <= temp2.getY()+temp2.getHeight()))
+				{
+					y -= dy;
+				}
+
+				if((x+size/2 >= temp2.getX() || x-size/2 <= temp2.getX()+temp2.getWidth())) //&& y - (temp2.getY()+temp2.getHeight()/2) >= x - (temp2.getX()+temp2.getWidth()/2)
+				{
+					x -= dx;
+				}
+
+			}
+
 		}
+
+	}
 
 
 
 
 	public static Rectangle getBounds()
 	{
-		return new Rectangle(x, y, size, size);
+		return new Rectangle(x-size/2, y-size/2, size, size);
 	}
 
 
