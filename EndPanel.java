@@ -34,7 +34,7 @@ public class EndPanel extends JPanel
         add(score1, gbc);
 
         gbc.gridy = 2;
-        score2 = new JLabel("joe\njoe");
+        score2 = new JLabel("joe");
         score2.setFont(font);
         add(score2, gbc);
 
@@ -44,18 +44,15 @@ public class EndPanel extends JPanel
         add(kills1, gbc);
 
         gbc.gridy = 4;
-        kills2 = new JLabel("nuts\nnuts");
+        kills2 = new JLabel("nuts");
         kills2.setFont(font);
         add(kills2, gbc);
 
         gbc.gridy = 5;
         JButton menu = new JButton("Menu");
         menu.setFont(font);
-        menu.addActionListener(e ->
-        {
-            main.goToMenu();
-        });
-        //add(menu, gbc);
+        menu.addActionListener(e -> main.goToMenu());
+        add(menu, gbc);
 
         setVisible(true);
 
@@ -66,8 +63,8 @@ public class EndPanel extends JPanel
      */
     public void updateInfo(int score, int kills)
     {
-        this.score2.setText("" + score);
-        this.kills2.setText("" + kills);
+        this.score2.setText("" + String.format("%,d", score));
+        this.kills2.setText("" + String.format("%,d", kills));
     }
 
 }

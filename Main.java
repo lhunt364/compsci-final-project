@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.*;
 import java.awt.*;
 
@@ -21,8 +25,11 @@ public class Main extends JFrame implements ActionListener
 	private JPanel cardPanel;
 	private MainPanel p;
 	private EndPanel e;
+	private MenuPanel m;
 
 	private double gunVolume; //volume of gun sounds
+	private double musicVolume;
+	private Clip music;
 
 	private String map; //current map
 
@@ -39,11 +46,11 @@ public class Main extends JFrame implements ActionListener
 		weapons = new ArrayList<>();
 		String[] akmSounds = {"sounds/akmfire.wav", "sounds/akmfire2.wav", "sounds/akmfire3.wav", "sounds/akmfire4.wav", "sounds/akmfire5.wav"};
 		String[] vectorSounds = {"sounds/vectorfire1.wav", "sounds/vectorfire2.wav", "sounds/vectorfire3.wav", "sounds/vectorfire4.wav", "sounds/vectorfire5.wav"};
-		weapons.add(new Weapon("AKM", 75, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 35, this));
-		weapons.add(new Weapon("ORSIS T-5000M", 400, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 55, this));
-		weapons.add(new Weapon("HK G28", 150, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3100, 3250, 1, new Color(225,208,126), 20, 45, this));
-		weapons.add(new Weapon("KRISS Vector", 35, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3100, 3150, 0, new Color(96,114,74), 50, 25, this));
-		weapons.add(new Weapon("KRISS Vector but better", 100, 4000, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 1, 1, 0, Color.PINK, 98, 25, this));
+		weapons.add(new Weapon("AKM", 75, 600, akmSounds, "sounds/akmreload.wav", "sounds/akmemptyreload.wav", 3000, 3700, 0, Color.orange, 30, 35, false, this));
+		weapons.add(new Weapon("ORSIS T-5000M", 200, 50, new String[]{"sounds/t5kfire.wav"}, "sounds/t5kreload.wav", "sounds/t5kemptyreload.wav", 3000, 4000, 1, Color.gray, 5, 55, true, this));
+		weapons.add(new Weapon("HK G28", 150, 700, new String[]{"sounds/g28fire.wav"}, "sounds/g28reload.wav", "sounds/g28emptyreload.wav", 3100, 3250, 1, new Color(225,208,126), 20, 45, false, this));
+		weapons.add(new Weapon("KRISS Vector", 35, 1700, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 3100, 3150, 0, new Color(96,114,74), 50, 25, false, this));
+		weapons.add(new Weapon("Dev Vector", 100, 4000, vectorSounds, "sounds/vectorreload.wav", "sounds/vectoremptyreload.wav", 1, 1, 0, Color.PINK, 98, 25, true, this));
 		equippedWeapon = weapons.get(3);
 		//set up other important stuff
 		map = "joe"; //<----------------------- SET MAP HERE <--------------------------
@@ -51,8 +58,11 @@ public class Main extends JFrame implements ActionListener
 		player = new Player(temp[2],temp[3], 50, 1000, 3, this);
 		//set up frame stuff
 		setBounds(100,100,600,600);
-		setTitle("joe");
+		setTitle("Breaking Fat: Hank Schrader Escapes The Ghostavos");
 		setResizable(false);
+
+		gunVolume = 2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
+		musicVolume = 2;
 
 		//set up panels
 		cardLayout = new CardLayout();
@@ -61,10 +71,13 @@ public class Main extends JFrame implements ActionListener
 		cardPanel.add(p, "game");
 		e = new EndPanel(600, 600, this);
 		cardPanel.add(e, "end");
+		m = new MenuPanel(600, 600, this);
+		cardPanel.add(m, "menu");
 		add(cardPanel);
-		cardLayout.show(cardPanel, "game");
+		goToGame();
+		goToMenu();
 
-		gunVolume = 0.2; // <<<------------------- VOLUME | 0 = no sound. 1 = full sound. 0.2 is good
+
 
 		//add key listener
 		addKeyListener(new KeyListener() {
@@ -73,37 +86,43 @@ public class Main extends JFrame implements ActionListener
 			public void keyTyped(KeyEvent e) {}
 
 			@Override
-			public void keyPressed(KeyEvent e) 
+			public void keyPressed(KeyEvent e)
 			{
 				char key = e.getKeyChar();
 
 				System.out.println("pressed: " + e.getKeyChar());
-				if (key == 'w') player.setDy(-1 * player.getSpeed());
-				if (key == 's') player.setDy(player.getSpeed());
-				if (key == 'a') player.setDx(-1 * player.getSpeed());
-				if (key == 'd') player.setDx(player.getSpeed());
-
-				if(key == 'r') equippedWeapon.reload(false);
-				if(key == '1' || key == '2' || key == '3' || key == '4' || key == '5') //change guns with number keys. this probably isnt permanent, but is good for testing.
+				if(true)
 				{
-					equippedWeapon = weapons.get(Integer.parseInt(key+"") - 1);
-					p.setEquippedWeapon(equippedWeapon);
+					if (key == 'w') player.setDy(-1 * player.getSpeed());
+					if (key == 's') player.setDy(player.getSpeed());
+					if (key == 'a') player.setDx(-1 * player.getSpeed());
+					if (key == 'd') player.setDx(player.getSpeed());
+
+					if (key == 'r') equippedWeapon.reload(false);
+					/*
+					if (key == '1' || key == '2' || key == '3' || key == '4' || key == '5') //change guns with number keys. this probably isnt permanent, but is good for testing.
+					{
+						equippedWeapon = weapons.get(Integer.parseInt(key + "") - 1);
+						p.setEquippedWeapon(equippedWeapon);
+					}
+					 */
 				}
-				
 			}
 
 			@Override
-			public void keyReleased(KeyEvent e) 
+			public void keyReleased(KeyEvent e)
 			{
 				System.out.println("released: " + e.getKeyChar());
 				char key = e.getKeyChar();
-				if(key == 'w') player.setDy(0);
-				if(key == 's') player.setDy(0);
-				if(key == 'a') player.setDx(0);
-				if(key == 'd') player.setDx(0);
-
+				if(state == 'g')
+				{
+					if (key == 'w') player.setDy(0);
+					if (key == 's') player.setDy(0);
+					if (key == 'a') player.setDx(0);
+					if (key == 'd') player.setDx(0);
+				}
 			}
-			
+
 		});
 
 
@@ -115,6 +134,16 @@ public class Main extends JFrame implements ActionListener
 		//timer
 		t = new Timer(20, this);
 		t.start();
+		//start background music
+		try {
+			music = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("sounds/BreakingBadThemeLoop.wav"));
+			music.open(inputStream);
+			FloatControl gainControl = (FloatControl) music.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(20f * (float) Math.log10(musicVolume/10.0));
+			music.start();
+			music.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (Exception e) {music = null;}
 	}
 
 	public static void main(String[] args) //main method
@@ -125,13 +154,13 @@ public class Main extends JFrame implements ActionListener
 	@Override
 	public void actionPerformed(ActionEvent e) //updates every frame (50fps)
 	{
-		if(state == 'g') //if playing the game
+		if(true) //if playing the game
 		{
 			player.update();
 			p.update();
 			p.repaint();
 		}
-		if(player.getHealth() <= 0) //if player is dead
+		if(player.getHealth() <= 0 && state == 'g') //if player is dead
 		{
 			goToEndScreen();
 		}
@@ -155,12 +184,14 @@ public class Main extends JFrame implements ActionListener
 		state = 'e';
 		e.updateInfo(score, kills);
 		cardLayout.show(cardPanel, "end");
+
 	}
 
 	public void goToMenu()
 	{
 		state = 'm';
-
+		cardLayout.show(cardPanel, "menu");
+		this.setFocusable(true);
 	}
 
 	public void goToGame()
@@ -170,10 +201,11 @@ public class Main extends JFrame implements ActionListener
 		player = new Player(temp[2],temp[3], 50, 1000, 3, this);
 		p.reset();
 		p.loadMap(map);
+		equippedWeapon.resetAmmo();
 		cardLayout.show(cardPanel, "game");
 	}
 
-	//drawing data getters
+	//drawing data getters/setters
 
 	/**@return ArrayList of all Enemies*/
 	public ArrayList<Enemy> getEnemies() {return p.getEnemies();}
@@ -183,10 +215,59 @@ public class Main extends JFrame implements ActionListener
 	public ArrayList<Wall> getWalls() {return p.getWalls();}
 
 	public double getGunVolume() {return gunVolume;}
+	public double getMusicVolume() {return musicVolume;}
 	public void setDifficulty(double d) {p.setDifficulty(d);}
 	public void addScore(int s) {score += s; kills++;}
 
 	public Weapon getEquippedWeapon(){return equippedWeapon;}
+	public ArrayList<Weapon> getWeapons() {return weapons;}
+
+	public void updateGameInfo(int weapon, String map, double difficulty)
+	{
+		equippedWeapon = weapons.get(weapon);
+		p.setEquippedWeapon(equippedWeapon);
+		this.map = map;
+		setDifficulty(difficulty);
+	}
+
+	public char getGState() {return state;}
+
+	public void increaseGameVol()
+	{
+		if(gunVolume < 9) gunVolume = (int)(gunVolume + 1);
+	}
+
+	public void decreaseGameVol()
+	{
+		if(gunVolume > 0) gunVolume = (int)(gunVolume - 1);
+	}
+
+	public void increaseMusicVol()
+	{
+		if(musicVolume < 9) musicVolume = (int)(musicVolume + 1);
+	}
+
+	public void decreaseMusicVol()
+	{
+		if(musicVolume > 0) musicVolume = (int)(musicVolume - 1);
+	}
+
+	public void resetMusic()
+	{
+		try {
+			music.stop();
+			double time = music.getFramePosition() % music.getFrameLength();
+			music = AudioSystem.getClip();
+			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("sounds/BreakingBadThemeLoop.wav"));
+			music.open(inputStream);
+			FloatControl gainControl = (FloatControl) music.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(20f * (float) Math.log10(musicVolume/10.0));
+			music.start();
+			music.setFramePosition((int)time);
+			music.loop(Clip.LOOP_CONTINUOUSLY);
+		} catch (Exception e) {music = null;}
+
+	}
 
 
 }
@@ -294,10 +375,6 @@ class MainPanel extends JPanel
 			}
 		});
 
-		//TODO add walls to make an actual map
-		//define things to draw
-		//walls.add(new Wall(0, 0, 100, 50)); // <----------------- MANUALLY ADD THINGS HERE <-------------------------
-		//enemies.add(new Enemy(50,50, pSize,1, 100,10, main));
 
 	}
 
@@ -443,7 +520,7 @@ class MainPanel extends JPanel
 			if (equippedWeapon.fire())
 			{
 				double gunDistance = 20.0 * pSize/50;
-				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle, 15, main));
+				bullets.add(new Bullet((int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.cos(angle)+player.getX()), (int)((equippedWeapon.getLength()*(pSize/50.0)+gunDistance)*Math.sin(angle)+player.getY()), 25, angle, 15, main, equippedWeapon.getPiercing()));
 			}
 			triggerDown = true;
 			shootTimer = 60.0/equippedWeapon.getFireRate();
@@ -496,19 +573,15 @@ class MainPanel extends JPanel
 	}
 
 
-	public void playerWallCollision(){
-
-	}
-
 	/**
 	 * attempts to spawn an enemy somewhere offscreen and increases the difficulty of the next enemy spawned
 	 */
 	public void spawnEnemy()
 	{
-		if(spawnTimer <= 0 && enemies.size() < 7) //spawn enemy
+		if(spawnTimer <= 0 && enemies.size() < 8 && main.getGState() == 'g') //spawn enemy
 		{
 			spawnTimer = 2 * spawnTimeScale; //reset timer
-			spawnTimeScale -= 0.013;
+			spawnTimeScale -= 0.013*difficulty;
 			Rectangle visibleArea = new Rectangle(player.getX() - width/2, player.getY() - height/2, width, height); //the area visible to the player
 			//Rectangle spawnArea = new Rectangle((int)(player.getX() - width*1.5 - pSize), (int)(player.getY() - height*1.5 - pSize), width*3, height*3); || !spawnArea.contains(spawn)
 			Point spawn = new Point((int)(Math.random()*mapWidth),(int)(Math.random()*mapHeight));
@@ -524,8 +597,8 @@ class MainPanel extends JPanel
 			speedScale += 0.06*difficulty;
 			dmgScale += 0.05*difficulty;
 			healthScale += 0.08*difficulty;
-			if(spawnTimeScale < 0.25) spawnTimeScale = 0.25; //lower limit for spawnTimeScale
-			if(speedScale > player.getSpeed()*0.85) speedScale = player.getSpeed()*0.85; //upper limit for speedScale
+			if(spawnTimeScale < 0.1) spawnTimeScale = 0.1; //lower limit for spawnTimeScale
+			if(speedScale > player.getSpeed()*0.75) speedScale = player.getSpeed()*0.75; //upper limit for speedScale
 		}
 		spawnTimer -= 0.02; //TIME BETWEEN FRAMES (0.02 is normal)
 	}

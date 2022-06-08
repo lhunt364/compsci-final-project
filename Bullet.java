@@ -20,7 +20,8 @@ public class Bullet extends JComponent
     private int speed;
     private double angle;
     private Main main;
-    public Bullet(int x,int y, int speed, double angle, int size, Main main)
+    private boolean piercing;
+    public Bullet(int x,int y, int speed, double angle, int size, Main main, boolean piercing)
     {
         this.speed = speed;
         this.angle = angle;
@@ -30,9 +31,9 @@ public class Bullet extends JComponent
         dy = (int)(Math.sin(angle) * speed);
         this.setSize(size,size);
         this.main = main;
+        this.piercing = piercing;
 
         b = new Ellipse2D.Double(0,0,14,14);
-
 
     }
     public void paintComponent(Graphics g)
@@ -76,6 +77,8 @@ public class Bullet extends JComponent
             }
         }
     }
+
+    public boolean isPiercing() {return piercing;}
 
 }
 

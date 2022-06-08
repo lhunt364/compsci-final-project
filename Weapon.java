@@ -21,9 +21,10 @@ public class Weapon
     private int ammo; //current ammo count (0 to magSize+1)
     private int length; //length of the gun in pixels
     private boolean reloading; //true if reloading, false if not
+    private boolean piercing;
     private Main main;
 
-    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, int reloadTime, int emptyReloadTime, int fireMode, Color color, int magSize, int length, Main main)
+    public Weapon(String name, int dmg, int fireRate, String[] fireSounds, String reloadSound, String emptyReloadSound, int reloadTime, int emptyReloadTime, int fireMode, Color color, int magSize, int length, boolean piercing, Main main)
     {
         this.name = name;
         this.dmg = dmg;
@@ -39,6 +40,7 @@ public class Weapon
         this.length = length;
         ammo = magSize + 1;
         reloading = false;
+        this.piercing = piercing;
         this.main = main;
     }
 
@@ -57,7 +59,7 @@ public class Weapon
                 AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(fireSounds[temp]));
                 clip.open(inputStream);
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()));
+                gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()/10.0));
                 clip.start();
             } catch (Exception e) {}
             ammo--;
@@ -83,7 +85,8 @@ public class Weapon
                     AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(emptyReloadSound));
                     clip.open(inputStream);
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()));
+                    gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()/10.0));
+                    System.out.println(main.getGunVolume()/10.0);
                     clip.start();
                     reloadWait(emptyReloadTime, this);
                 } catch (Exception e) {}
@@ -99,7 +102,7 @@ public class Weapon
                     AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(reloadSound));
                     clip.open(inputStream);
                     FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                    gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()));
+                    gainControl.setValue(20f * (float) Math.log10(main.getGunVolume()/10.0));
                     clip.start();
                     reloadWait(reloadTime, this);
                 } catch (Exception e) {}
@@ -151,4 +154,10 @@ public class Weapon
     public int getDmg(){return dmg;}
 
     public int getMagSize() {return magSize;}
+
+    public String getName() {return name;}
+
+    public void resetAmmo() {ammo = magSize + 1;}
+
+    public boolean getPiercing() {return piercing;}
 }

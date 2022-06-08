@@ -88,15 +88,22 @@ public class Enemy
 		int damage = currentWeapon.getDmg();
 		int bulletLen = main.getBullets().size();
 		for(int i = 0; i<bulletLen; i++){
-			if(main.getBullets().size()>0) {
-			if ((main.getBullets().size() > i)) {
-			if(main.getBullets().get(i).getBounds().intersects(this.getBounds())){
-				this.health -= damage;
-						main.getBullets().remove(i);
-						i--;
+			if(main.getBullets().size()>0)
+			{
+				if ((main.getBullets().size() > i))
+				{
+					if(main.getBullets().get(i).getBounds().intersects(this.getBounds()))
+					{
+						this.health -= damage;
+
+						if(!main.getBullets().get(i).isPiercing())
+						{
+							main.getBullets().remove(i);
+							i--;
+						}
 					}
 				}
-				}
+			}
 		}
 		//collision with walls
 		ArrayList<Wall> temp = main.getWalls();
