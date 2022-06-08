@@ -1,7 +1,5 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
-import java.io.File;
 import java.util.ArrayList;
 
 public class MenuPanel extends JPanel
@@ -151,7 +149,7 @@ class PlayPanel extends JPanel
 
         gbc.gridx = 0;
         gbc.gridy = 3;
-        JLabel difLabel = new JLabel("Difficulty: ");
+        JLabel difLabel = new JLabel("Mode: ");
         difLabel.setFont(font);
         add(difLabel, gbc);
 
